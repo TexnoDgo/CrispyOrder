@@ -1,0 +1,181 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Order" %} № {{ order.id }}{% endblock %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'orders/order_style.css' %}">
+
+    <div class="vso">
+        <!--Навигация-->
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'orders' %}">{% trans "All orders" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Order: " %} "{{ massorder.title }}"</li>
+          </ol>
+        </nav>
+        <!--Навигация-->
+
+        <!--Предложения для автора-->
+        <div class="vs">
+            {% if user == MassOrder.author %}
+                {% for form in group_suggestion %}
+                    <div class="card border-dark mb-3" style="max-width: 32rem;">
+                        <div class="card-header bg-transparent border-dark">
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    {% trans "Offer created: " %} {{ form.date_create }}
+                                </small>
+                                <small class="text-muted col">
+                                    {% trans "Proposal author: " %} {{ form.author }}
+                                </small>
+                                <small class="text-muted ml-3">
+                                    {% for profile in profiles %}
+                                        {% if profile.user == form.author %}
+                                            {% trans "Rating: " %}
+                                            <span class="badge badge-success">{{ profile.rating }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </small>
+                            </p>
+                        </div>
+                        <div class="card-body text-dark">
+                            <p class="card-text">{{ form.offer_description }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-dark">
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    {% trans "Deadline: " %}{{ form.deadline }}
+                                </small>
+                                <small class="text-muted col ml-5">
+                                    {% trans "Offer price: " %}{{ form.offer_price}}&#8372;
+                                </small>
+                                <small class="text-muted ml-5">
+                                    <a href="#" type="button"
+                                       class="btn btn-outline-info btn-sm">
+                                        {% trans "Details" %}
+                                    </a>
+                                </small>
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% elif user != order.author %}
+                <div class="card" style="width: 32rem;" align="center">
+                  <ul class="list-group list-group-flush">
+                    <a href="#"
+                       class="list-group-item list-group-item-action list-group-item">
+                        {% trans "Leave an offer" %}
+                    </a>
+                  </ul>
+                </div>
+            {% endif %}
+        </div>
+        <!--Предложения для автора-->
+
+        <!--Заказ-->
+        <div class="vo">
+            <div class="card mb-3">
+                <div class="card-header bg-transparent border-dark">
+                    <p class="card-text">
+                        <small class="text-muted col">
+                            {% trans "Order created: " %}{{ massorder.date_create }}
+                        </small>
+
+                        <small class="text-muted ml-5 col">
+                            {% trans "Order author: " %} {{ massorder.author }}
+                        </small>
+                        <small class="text-muted ml-5 col">
+                            {% trans "Order City: " %} {{ massorder.city }}
+                        </small>
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted col">
+                            {% trans "Complete work before: " %} {{ massorder.lead_time }}
+                        </small>
+                        <small class="text-muted ml-5 col">
+                            {% trans "Order Budget: " %} {{ massorder.proposed_budget }}
+                        </small>
+
+                        <small class="text-muted ml-4">
+                            {% trans "Number of items: " %}{{ massorder.amount }} {% trans "units." %}
+                        </small>
+                    </p>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ massorder.title }}
+                        <small>
+                            {% if order.status == 'In discussion' %}
+                                <span class="badge badge-pill badge-warning">{{ massorder.status }}</span>
+                            {% elif order.status == 'In work' %}
+                                <span class="badge badge-pill badge-success">{{ massorder.status }}</span>
+                            {% elif order.status == 'Done' %}
+                                <span class="badge badge-pill badge-secondary">{{ massorder.status }}</span>
+                            {% elif order.status == 'Canceled' %}
+                                <span class="badge badge-pill badge-danger">{{ massorder.status }}</span>
+                            {% endif %}
+                        </small>
+                    </h5>
+                    <p class="card-text">{{ massorder.description }}</p>
+
+                </div>
+                <a href="#">
+                    <img src="#" class="card-img-top" alt="...">
+                </a>
+                <div class="card-body">
+                    <small class="text-muted">
+                        {% trans "Order files" %}
+                    </small>
+                </div>
+                <div class="card-footer bg-transparent border-dark">
+                        <p class="card-text" align="center">
+                            <small  class="col">
+                                {% if user == massorder.author %}
+                                    {% if massorder.status == 'In work' %}
+                                        <a href="{% url 'status_ready' object.id %}"
+                                           class="btn btn-primary  btn-lg active btn-sm"
+                                           role="button" aria-pressed="true">
+                                            {% trans "Order completed" %}
+                                        </a>
+                                    {% elif massorder.status == 'Done' %}
+                                        <a href="{% url 'status_ready' object.id %}"
+                                           class="btn btn-secondary btn-lg active btn-sm"
+                                           role="button" aria-pressed="true">
+                                            {% trans "Modify order" %}
+                                        </a>
+                                    {% elif massorder.status == 'In discussion' %}
+                                        <button class="btn btn-primary  btn-lg active btn-sm"
+                                           role="button" aria-pressed="true" disabled>
+                                            {% trans "Order completed" %}
+                                        </button>
+                                    {% endif %}
+                                {% endif %}
+                            </small>
+                            <small class="col ml-2">
+                                {% if user == massorder.author %}
+                                    <a href="{% url 'order_update' object.id %}"class="btn btn-warning btn-lg active btn-sm" role="button" aria-pressed="true">
+                                        {% trans "Change Order" %}
+                                    </a>
+                                {% endif %}
+                            </small>
+                            <small class="col ml-2">
+                                {% if user == massorder.author %}
+                                    <a href="{% url 'order_delete' object.id %}" class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true">
+                                        {% trans "Delete order" %}
+                                    </a>
+                                {% endif %}
+                            </small>
+                            <small class="col ml-2">
+                                <a href="#"  class="btn btn-light btn-lg active btn-sm" role="button">
+                                    {% trans "Share order" %}
+                                </a>
+                            </small>
+                        </p>
+                    </div>
+            </div>
+        </div>
+        <!--Заказ-->
+    </div>
+{% endblock %}

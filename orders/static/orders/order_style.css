@@ -1,0 +1,32 @@
+
+.page1 {
+    height: 50rem;
+}
+
+.page2 {
+    height: 61rem;
+}
+
+.order {
+    width: 30%;
+    float: left;
+}
+.detail {
+    width: 45%;
+    float: left;
+}
+
+.suggestions {
+    width: 25%;
+    float: left;
+}
+
+.order2 {
+    width: 60%;
+    float: left;
+}
+
+.suggestions2 {
+    width: 40%;
+    float: left;
+}

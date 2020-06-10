@@ -1,0 +1,328 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "CrispyMachine - You Suggestions" %}{% endblock %}
+{% load static %}
+{% load bootstrap_pagination %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'dashboard/style.css' %}">
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% trans "You Suggestions" %}</li>
+  </ol>
+</nav>
+
+<legend class="border-bottom mb-4" align="center">{% trans "YOUR SUGGESTIONS" %}</legend>
+
+<nav>
+    <div class="nav nav-tabs" id="nav-tab" role="tablist" align="center">
+        <a class="nav-item nav-link active col" id="nav-discussion-tab" data-toggle="tab" href="#nav-discussion"
+           role="tab" aria-controls="nav-discussion" aria-selected="true">
+            {% trans "DISCUSSION Suggestions" %}
+        </a>
+        <a class="nav-item nav-link col" id="nav-work-tab" data-toggle="tab" href="#nav-work"
+           role="tab" aria-controls="nav-work" aria-selected="false">
+            {% trans "WORK Suggestions" %}
+        </a>
+        <a class="nav-item nav-link col" id="nav-done-tab" data-toggle="tab" href="#nav-done"
+           role="tab" aria-controls="nav-done" aria-selected="false">
+            {% trans "DONE Suggestions" %}
+        </a>
+        <a class="nav-item nav-link col" id="nav-canceled-tab" data-toggle="tab" href="#nav-canceled"
+           role="tab" aria-controls="nav-canceled" aria-selected="false">
+            {% trans "CANCELED Suggestions" %}
+        </a>
+        <a class="nav-item nav-link col" id="nav-featured-tab" data-toggle="tab" href="#nav-featured"
+           role="tab" aria-controls="nav-featured" aria-selected="false">
+            {% trans "FEATURED Suggestions" %}
+        </a>
+    </div>
+</nav>
+<div class="tab-content" id="nav-tabContent">
+    <div class="tab-pane fade show active mt-3" id="nav-discussion" role="tabpanel" aria-labelledby="nav-discussion-tab">
+        <div class="row row-cols-1 row-cols-md-3 ml-3">
+            {% for form in suggestions %}
+            {% csrf_token %}
+                {% if form.status == 'Discussion' %}
+                    {% for one_order in orders %}
+                        {% if form.order.id == one_order.id %}
+                            <div class="col mb-4">
+                                <div class="card border-dark mb-3" style="max-width: 32rem;">
+                                    <div class="card-header bg-transparent border-dark">
+                                        <p class="card-text">
+                                            <small class="text-muted">
+                                                {% trans "Offer created: " %} {{ form.date_create }}
+                                            </small>
+                                            <small class="text-muted col">
+                                                {% trans "Proposal author: " %} {{ form.author }}
+                                            </small>
+                                            <small class="text-muted ml-3">
+                                                {% for profile in profiles %}
+                                                    {% if profile.user == form.author %}
+                                                        {% trans "Rating: " %}
+                                                        <span class="badge badge-success">{{ profile.rating }}</span>
+                                                    {% endif %}
+                                                {% endfor %}
+                                            </small>
+                                        </p>
+                                    </div>
+                                    <div class="card-body text-dark">
+                                        <p class="card-text">{{ form.offer_description }}</p>
+                                    </div>
+                                    <div class="card-footer bg-transparent border-dark">
+                                        <p class="card-text">
+                                            <small class="text-muted">
+                                                {% trans "Deadline: " %}{{ form.deadline }}
+                                            </small>
+                                            <small class="text-muted ml-2">
+                                                {% trans "Offer price: " %}{{ form.offer_price}}&#8372;
+                                            </small>
+                                            <small class="text-muted ml-2">
+                                                <a href="{% url 'suggestion_detail' url=form.id %}" type="button"
+                                                   class="btn btn-outline-info btn-sm">
+                                                    {% trans "Suggestion Details" %}
+                                                </a>
+                                            </small>
+                                        </p>
+                                    </div>
+                                    <div class="card-footer bg-transparent border-dark">
+                                        <div class="row no-gutters">
+                                            <div class="col">
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ one_order.title }}</h5>
+                                                    <p class="card-text">{{ one_order.description }}</p>
+                                                    <p class="card-text">
+                                                        <a class="btn btn-outline-success col-12 btn-sm"
+                                                           href="{% url 'order_and_suggestion_view' url=one_order.id %}">
+                                                            {% trans "Order Details" %}
+                                                        </a>
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="tab-pane fade mt-3" id="nav-work" role="tabpanel" aria-labelledby="nav-work-tab">
+        <div class="row row-cols-1 row-cols-md-2 ml-2">
+            {% for form in suggestions %}
+                {% if form.status == 'InWork' %}
+                    {% for one_order in orders %}
+                        {% if form.order.id == one_order.id %}
+                            <div class="col mb-4">
+                                <div class="card border-dark mb-3" style="max-width: 32rem;">
+                                <div class="card-header bg-transparent border-dark">
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            {% trans "Offer created: " %} {{ form.date_create }}
+                                        </small>
+                                        <small class="text-muted col">
+                                            {% trans "Proposal author: " %} {{ form.author }}
+                                        </small>
+                                        <small class="text-muted ml-3">
+                                            {% for profile in profiles %}
+                                                {% if profile.user == form.author %}
+                                                    {% trans "Rating: " %}
+                                                    <span class="badge badge-success">{{ profile.rating }}</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="card-body text-dark">
+                                    <p class="card-text">{{ form.offer_description }}</p>
+                                </div>
+                                <div class="card-footer bg-transparent border-dark">
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            {% trans "Deadline: " %}{{ form.deadline }}
+                                        </small>
+                                        <small class="text-muted ml-2">
+                                            {% trans "Offer price: " %}{{ form.offer_price}}&#8372;
+                                        </small>
+                                        <small class="text-muted ml-2">
+                                            <a href="{% url 'suggestion_detail' url=form.id %}" type="button"
+                                               class="btn btn-outline-info btn-sm">
+                                                {% trans "Suggestion Details" %}
+                                            </a>
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent border-dark">
+                                    <div class="row no-gutters">
+                                        <div class="col">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ one_order.title }}</h5>
+                                                <p class="card-text">{{ one_order.description }}</p>
+                                                <p class="card-text">
+                                                    <a class="btn btn-outline-success col-12 btn-sm"
+                                                       href="{% url 'order_and_suggestion_view' url=one_order.id %}">
+                                                        {% trans "Order Details" %}
+                                                    </a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="tab-pane fade mt-3" id="nav-done" role="tabpanel" aria-labelledby="nav-done-tab">
+        <div class="row row-cols-1 row-cols-md-3 ml-3">
+            {% for form in suggestions %}
+                {% if form.status == 'Done' %}
+                    {% for one_order in orders %}
+                        {% if form.order.id == one_order.id %}
+                          <div class="col mb-4">
+                                <div class="card border-dark mb-3" style="max-width: 32rem;">
+                                <div class="card-header bg-transparent border-dark">
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            {% trans "Offer created: " %} {{ form.date_create }}
+                                        </small>
+                                        <small class="text-muted col">
+                                            {% trans "Proposal author: " %} {{ form.author }}
+                                        </small>
+                                        <small class="text-muted ml-3">
+                                            {% for profile in profiles %}
+                                                {% if profile.user == form.author %}
+                                                    {% trans "Rating: " %}
+                                                    <span class="badge badge-success">{{ profile.rating }}</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="card-body text-dark">
+                                    <p class="card-text">{{ form.offer_description }}</p>
+                                </div>
+                                <div class="card-footer bg-transparent border-dark">
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            {% trans "Deadline: " %}{{ form.deadline }}
+                                        </small>
+                                        <small class="text-muted ml-2">
+                                            {% trans "Offer price: " %}{{ form.offer_price}}&#8372;
+                                        </small>
+                                        <small class="text-muted ml-2">
+                                            <a href="{% url 'suggestion_detail' url=form.id %}" type="button"
+                                               class="btn btn-outline-info btn-sm">
+                                                {% trans "Suggestion Details" %}
+                                            </a>
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent border-dark">
+                                    <div class="row no-gutters">
+                                        <div class="col">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ one_order.title }}</h5>
+                                                <p class="card-text">{{ one_order.description }}</p>
+                                                <p class="card-text">
+                                                    <a class="btn btn-outline-success col-12 btn-sm"
+                                                       href="{% url 'order_and_suggestion_view' url=one_order.id %}">
+                                                        {% trans "Order Details" %}
+                                                    </a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="tab-pane fade mt-3" id="nav-canceled" role="tabpanel" aria-labelledby="nav-canceled-tab">
+        <div class="row row-cols-1 row-cols-md-3 ml-3">
+            {% for form in suggestions %}
+                {% if form.status == 'Canceled' %}
+                    {% for one_order in orders %}
+                        {% if form.order.id == one_order.id %}
+                          <div class="col mb-4">
+                                <div class="card border-dark mb-3" style="max-width: 32rem;">
+                                <div class="card-header bg-transparent border-dark">
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            {% trans "Offer created: " %} {{ form.date_create }}
+                                        </small>
+                                        <small class="text-muted col">
+                                            {% trans "Proposal author: " %} {{ form.author }}
+                                        </small>
+                                        <small class="text-muted ml-3">
+                                            {% for profile in profiles %}
+                                                {% if profile.user == form.author %}
+                                                    {% trans "Rating: " %}
+                                                    <span class="badge badge-success">{{ profile.rating }}</span>
+                                                {% endif %}
+                                            {% endfor %}
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="card-body text-dark">
+                                    <p class="card-text">{{ form.offer_description }}</p>
+                                </div>
+                                <div class="card-footer bg-transparent border-dark">
+                                    <p class="card-text">
+                                        <small class="text-muted">
+                                            {% trans "Deadline: " %}{{ form.deadline }}
+                                        </small>
+                                        <small class="text-muted ml-2">
+                                            {% trans "Offer price: " %}{{ form.offer_price}}&#8372;
+                                        </small>
+                                        <small class="text-muted ml-2">
+                                            <a href="{% url 'suggestion_detail' url=form.id %}" type="button"
+                                               class="btn btn-outline-info btn-sm">
+                                                {% trans "Suggestion Details" %}
+                                            </a>
+                                        </small>
+                                    </p>
+                                </div>
+                                <div class="card-footer bg-transparent border-dark">
+                                    <div class="row no-gutters">
+                                        <div class="col-md-4">
+                                            <img src="{{one_order.image_view.url }}" class="card-img" alt="...">
+                                        </div>
+                                        <div class="col-md-8">
+                                            <div class="card-body">
+                                                <h5 class="card-title">{{ one_order.title }}</h5>
+                                                <p class="card-text">{{ one_order.description }}</p>
+                                                <p class="card-text">
+                                                    <a class="btn btn-outline-success col-12 btn-sm"
+                                                       href="{% url 'order_and_suggestion_view' url=one_order.id %}">
+                                                        {% trans "Order Details" %}
+                                                    </a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="tab-pane fade mt-3" id="nav-featured" role="tabpanel" aria-labelledby="nav-featured-tab">...</div>
+</div>
+{% endblock %}
+

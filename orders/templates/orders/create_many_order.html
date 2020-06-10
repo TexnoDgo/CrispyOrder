@@ -1,0 +1,31 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}{% trans "Create Group Order" %}{% endblock %}
+
+{% block content %}
+
+
+<link rel="stylesheet" href="{% static 'orders/style.css' %}">
+
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Мясорубка</li>
+            </ol>
+        </nav>
+        <h1>Создание многих заказов</h1>
+        {% for key, value in data.items %}
+            {% for element in value %}
+                <a href="{{ element }}" class="badge badge-primary" target="blank">{{ element }}</a>
+            {% endfor %}
+        {% endfor %}
+        {{file_path}}
+        {{ group_order_form|crispy }}
+        <hr>
+        {{detail_form}}
+
+    </div>
+{% endblock %}

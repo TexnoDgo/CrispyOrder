@@ -1,0 +1,9 @@
+body {
+    height: 65rem;
+}
+
+.profile {
+    top: 5rem;
+    position: absolute;
+    left: 30rem;
+}

@@ -1,0 +1,124 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}{% trans "Set up notifications" %}{% endblock %}
+
+{% block content %}
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4">Настройка уведомлений</h1>
+        <p class="lead">Настройка уведомлений поможет вам удобным образом получать свежую информацию о новыйх заказах, а
+     так же об обновлениях на сайте, новостях, статьях.</p>
+    </div>
+    <div class="container">
+        <form class="form-group" method="post">
+            {% csrf_token %}
+             <table>
+                <tbody>
+                    <tr>
+                        <td colspan="6">
+                            Уведомления о новых заказах
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">Получать информацию о всех заказах?</td>
+                        <td colspan="2">
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input"
+                                     id="notifications" name="notifications"
+                                     value="{{form.notifications}}">
+                              <label class="custom-control-label" for="notifications">Нет/Да</label>
+                            </div>
+                        </td>
+                        <td colspan="2">{{ form.timing }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            Получать уведомления о новых заказах по категория
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">Выберите категории заказов</td>
+                        <td colspan="3">{{ form.categories }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">Метод получения уведомлений</td>
+                    </tr>
+                    <tr>
+                        <td>Получать уведомления в личный кабинет</td>
+                        <td>
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input"
+                                     id="notifi_account" name="notifi_account"
+                                     value="{{ form.notifi_account }}">
+                              <label class="custom-control-label" for="notifi_account">Нет/Да</label>
+                            </div>
+                        </td>
+                        <td>Получать уведомления по электронной почте</td>
+                        <td>
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input"
+                                     id="notifi_email" name="notifi_email"
+                                     value="{{form.notifi_email}}">
+                              <label class="custom-control-label" for="notifi_email">Нет/Да</label>
+                            </div>
+                        </td>
+                        <td>Получать СМС рассылку</td>
+                        <td>
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input"
+                                     id="notifi_sms" name="notifi_sms"
+                                     value="{{form.notifi_sms}}">
+                              <label class="custom-control-label" for="notifi_sms">Нет/Да</label>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            Другие уведомления
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Новости</td>
+                        <td>
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input"
+                                     id="notifi_news" name="notifi_news"
+                                     value="{{form.notifi_news}}">
+                              <label class="custom-control-label" for="notifi_news">Нет/Да</label>
+                            </div>
+                        </td>
+                        <td>Статьи</td>
+                        <td>
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input"
+                                     id="notifi_articles" name="notifi_articles"
+                                     value="{{form.notifi_articles}}">
+                              <label class="custom-control-label" for="notifi_articles">Нет/Да</label>
+                            </div>
+                        </td>
+                        <td>Обновления</td>
+                        <td>
+                            <div class="custom-control custom-switch">
+                              <input type="checkbox" class="custom-control-input"
+                                     id="notifi_updates" name="notifi_updates"
+                                     value="{{form.notifi_updates}}">
+                              <label class="custom-control-label" for="notifi_updates">Нет/Да</label>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <hr class="my-4">
+            <p>Чтобы сохранить настройки уведомлений нажмите "Сохранить". Для их отмены "Отменить"</p>
+            <button class="btn btn-outline-success btn-lg ml-4" type="submit">Сохранить</button>
+            <a class="btn btn-outline-secondary btn-lg ml-1" href="#" role="button">Отменить</a>
+        </form>
+    </div>
+
+</div>
+
+
+{% endblock %}
+

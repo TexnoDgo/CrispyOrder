@@ -1,0 +1,139 @@
+body {
+    height: 100%;
+}
+
+
+* {
+    box-sizing: border-box;
+}
+
+
+.order_create_table {
+    border: 1px solid #aaaaaa;
+}
+
+.tr1 {
+    border: 1px solid #aaaaaa;
+}
+
+.tr2 {
+    border: 1px solid #aaaaaa;
+}
+
+.th, td {
+    font-size: 16px;
+    border-color: #aaaaaa; /* Цвет границы */
+    padding: 5px; /* Поля вокруг текста */
+  }
+
+
+.good {
+    width: 60%;
+    position: absolute;
+    left: 20%;
+    background:#125a66;
+}
+
+.good .header {
+    height:100 px;
+    margin-bottom: 120px;
+
+}
+
+.good .header .logo {
+    background:#aaaaaa;
+    width:20%;
+    float:left;
+    height: 80px;
+    text-align: center;
+}
+
+.good .header .header-text {
+    width:80%;
+    float:left;
+    padding-left: 10px;
+    height: 100px;
+}
+
+.good .header .header-text .headline {
+    font-size: 20px;
+    background:#ffffff;
+    text-align: center;
+}
+
+.good .header .header-text .description {
+    font-size: 12px;
+    background:#cccccc;
+    text-align: center;
+}
+
+.content {
+    background:#3269a8;
+    min-height: 500px;
+}
+
+.content .form {
+    background:#cccccc;
+    width: 95%;
+}
+
+.content .form .top-form {
+    background:#aaaaaa;
+    width: 95%;
+    font-size: 10px;
+}
+
+.page {
+    width: 70%;
+    position: absolute;
+    left: 15%;
+}
+
+.orders-filter {
+    width: 20%;
+    float: left;
+    border: 5px solid #ffffff;
+
+}
+
+.orders-views {
+    width: 80%;
+    float: left;
+    border: 1px solid #ffffff;
+}
+
+
+
+.pagination {
+    float: right;
+}
+
+
+.table {
+    width: 100%;
+    border-collapse:collapse;
+    border-spacing;
+
+}
+.table, td, th {
+    border: 1px solid #C8CBCF;
+    width: 300px;
+    text-align: center;
+}
+.td, th {
+    padding: 3px;
+    width: 30px;
+    height: 35px;
+    text-align: left;
+}
+.th {
+    background-color: #7accee;
+    text-align: center;
+}
+
+.page-footer {
+    margin-bottom: -100px;
+    /*Минус Высота футера*/
+    height: 100px;
+    /*Высота футера*/
+}

@@ -1,0 +1,63 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}{% trans "CrispyOrder|Create Suggestion" %}{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'orders/create_single_order.css' %}">
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'order_and_suggestion_view' url=order.pk %}">
+            {% trans "Order: " %}{{order.title}}
+        </a></li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Create Suggestion" %}</li>
+    </ol>
+</nav>
+
+<div class="container">
+    <h1 class="display-5" align="center">{% trans "Create a new suggestion" %}</h1>
+    <p class="lead ml-5">
+        {% trans "Below is the suggestion creation form, fill it out, read the tips and tricks carefully." %}
+         {% trans "For more detailed instructions on creating suggestions, click here" %}
+        <a href="#">{% trans "read more." %}</a>
+    </p>
+    <form class="text-left" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item col-8">{{ form.offer_description|as_crispy_field }}</li>
+            <li class="list-group-item col-4">
+                <small>
+                    {% trans "Describe in detail the work that needs to be done." %}
+                    {% trans "Specify special requirements, if necessary, describe the technical process." %}
+                </small>
+            </li>
+        </ul>
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item col-8">{{ form.deadline|as_crispy_field }}</li>
+            <li class="list-group-item col-4">
+                <small>{% trans "Select an order cover. It is recommended to use a drawing made to be made," %}
+                    {% trans "so that the performers could immediately evaluate the area of work. Download the drawing" %}
+                    {% trans "in PDF format." %}
+                </small>
+            </li>
+        </ul>
+        <ul class="list-group list-group-horizontal">
+            <li class="list-group-item col-8">{{ form.offer_price|as_crispy_field }}</li>
+            <li class="list-group-item col-4">
+                <small>{% trans "Select the city where the order will be sent." %}</small>
+            </li>
+        </ul>
+        <hr>
+        <button class="btn btn-lg btn-outline-success btn-block" type="submit">
+            {% trans "CREATE" %}
+        </button>
+    </form>
+    <hr>
+</div>
+
+
+{% endblock %}
+

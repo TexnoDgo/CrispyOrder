@@ -1,0 +1,68 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}{% trans "Create Order" %}{% endblock %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'orders/style.css' %}">
+    <div class="container">
+        <form class="suggestion-post" method="post">
+            {% csrf_token %}
+            <div class="container">
+                <div class="content-section">
+                    <table class="order_create_table">
+                        <tbody>
+                            <tr>
+                                <td colspan="5">
+                                    <h2>СОЗДАНИЕ ПРЕДЛОЖЕНИЯ</h2>
+                                    <hr>
+                                </td>
+
+                            </tr>
+                            <tr class="tr1">
+                                <td colspan="4">
+                                    {{ suggestion.offer_description|as_crispy_field }}
+                                </td>
+                                <td colspan="1">
+                                    <small>Опишите ваше предложение как можно подробее.</small>
+                                </td>
+                            </tr>
+
+                            <tr class="tr1">
+                                <td>
+                                    {{ suggestion.deadline|as_crispy_field }}
+                                </td>
+                                <td colspan="2">
+                                    <small>Укажите реальные сроки выполнения заказ. Формат ввода "ГГГГ-ММ-ДД". Напимер 2020-01-01.</small>
+                                </td>
+                                <td>
+                                    {{ suggestion.offer_price|as_crispy_field }}
+                                </td>
+                                <td>
+                                    <small>Укажите цену за изготовление всего кол-ва изделий указанного в заказе.</small>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="2" class="tr1">
+                                    <hr>
+                                    <small>* - Указанные поля обязательны к заполнению</small>
+                                </td>
+                                <td colspan="3">
+                                    <hr>
+                                    <small>
+                                        Отправляйте как можно больше предложений. Это повысит активность вашего аккаунта.
+                                    </small>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <hr>
+            <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans "CREATE" %}</button>
+        </form>
+    </div>
+{% endblock %}
+

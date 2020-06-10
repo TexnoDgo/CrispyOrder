@@ -1,0 +1,21 @@
+.page {
+    height: 50rem;
+}
+
+.filters {
+    width: 10%;
+    float: left;
+}
+
+.orders {
+    width: 88%;
+    float: left;
+
+}
+
+.pagination {
+  position: absolute;
+  right: 5rem;
+  bottom: 0;
+  height: 0;
+}

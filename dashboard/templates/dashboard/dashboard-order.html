@@ -1,0 +1,182 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Dashboard Order" %}{% endblock %}
+{% load static %}
+{% load bootstrap_pagination %}
+
+{% block content %}
+
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{% trans "You Orders" %}</li>
+  </ol>
+</nav>
+<nav>
+    <div class="nav nav-tabs ml-2 mr-2" id="nav-tab" role="tablist" align="center">
+        <a class="nav-item nav-link active col" id="nav-discussion-tab" data-toggle="tab"
+           href="#nav-discussion" role="tab" aria-controls="nav-discussion" aria-selected="true">
+            {% trans "Discussion Orders" %}
+        </a>
+        <a class="nav-item nav-link col" id="nav-work-tab" data-toggle="tab"
+           href="#nav-work" role="tab" aria-controls="nav-work" aria-selected="false">
+            {% trans "Work orders" %}
+        </a>
+        <a class="nav-item nav-link col" id="nav-fulfilled-tab" data-toggle="tab"
+           href="#nav-fulfilled" role="tab" aria-controls="nav-fulfilled" aria-selected="false">
+            {% trans "Orders Fulfilled" %}
+        </a>
+        <a class="nav-item nav-link col" id="nav-canceled-tab" data-toggle="tab"
+           href="#nav-canceled" role="tab" aria-controls="nav-canceled" aria-selected="false">
+            {% trans "Canceled Orders" %}
+        </a>
+        <a class="nav-item nav-link col" id="nav-selected-tab" data-toggle="tab"
+           href="#nav-selected" role="tab" aria-controls="nav-selected" aria-selected="false">
+            {% trans "Selected Orders" %}
+        </a>
+    </div>
+</nav>
+<div class="card ml-2 mr-2" style="height: 47rem;">
+    <div class="tab-content" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-discussion" role="tabpanel" aria-labelledby="nav-discussion-tab">
+            {% if orders %}
+                <div class="row row-cols-1 row-cols-md-5 mt-2">
+                    {% for order in orders %}
+                        {% if order.status == 'Discussion' %}
+                          <div class="col mb-4">
+                            <div class="card border-light">
+                              <img class="card-img-top" src="{{order.image_cover.url }}" width="300" height="auto">
+                              <div class="card-body">
+                                <h5 class="card-title">{{ order.title }}</h5>
+                                <p class="card-text">{{ order.description }}</p>
+                              </div>
+                              <div class="card-footer bg-transparent border-light">
+                                  <a class="btn btn-outline-success col-12" href="{% url 'order_and_suggestion_view' url=order.id %}">{% trans "Details" %}</a>
+                              </div>
+                            </div>
+                          </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="row " style="width: 100%;">
+                <div class="col mb-4"  align="center">
+                    <small>
+                        {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
+                        <a href="{% url 'order_create' %}">{% trans "here." %}</a>
+                    </small>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="tab-pane fade" id="nav-work" role="tabpanel" aria-labelledby="nav-work-tab">
+            {% if orders %}
+                <div class="row row-cols-1 row-cols-md-5 mt-2">
+                    {% for order in orders %}
+                        {% if order.status == 'InWork' %}
+                          <div class="col mb-4">
+                            <div class="card border-light">
+                              <img class="card-img-top" src="{{order.image_cover.url }}" width="300" height="auto">
+                              <div class="card-body">
+                                <h5 class="card-title">{{ order.title }}</h5>
+                                <p class="card-text">{{ order.description }}</p>
+                              </div>
+                              <div class="card-footer bg-transparent border-light">
+                                  <a class="btn btn-outline-success col-12" href="{% url 'order_and_suggestion_view' url=order.id %}">{% trans "Details" %}</a>
+                              </div>
+                            </div>
+                          </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="row " style="width: 100%;">
+                <div class="col mb-4"  align="center">
+                    <small>
+                        {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
+                        <a href="{% url 'order_create' %}">{% trans "here." %}</a>
+                    </small>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="tab-pane fade" id="nav-fulfilled" role="tabpanel" aria-labelledby="nav-fulfilled-tab">
+            {% if orders %}
+                <div class="row row-cols-1 row-cols-md-5 mt-2">
+                    {% for order in orders %}
+                        {% if order.status == 'Done' %}
+                          <div class="col mb-4">
+                            <div class="card border-light">
+                              <img class="card-img-top" src="{{order.image_cover.url }}" width="300" height="auto">
+                              <div class="card-body">
+                                <h5 class="card-title">{{ order.title }}</h5>
+                                <p class="card-text">{{ order.description }}</p>
+                              </div>
+                              <div class="card-footer bg-transparent border-light">
+                                  <a class="btn btn-outline-success col-12" href="{% url 'order_and_suggestion_view' url=order.id %}">{% trans "Details" %}</a>
+                              </div>
+                            </div>
+                          </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="row " style="width: 100%;">
+                <div class="col mb-4"  align="center">
+                    <small>
+                        {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
+                        <a href="{% url 'order_create' %}">{% trans "here." %}</a>
+                    </small>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="tab-pane fade" id="nav-canceled" role="tabpanel" aria-labelledby="nav-canceled-tab">
+            {% if orders %}
+                <div class="row row-cols-1 row-cols-md-5 mt-2">
+                    {% for order in orders %}
+                        {% if order.status == 'Canceled' %}
+                          <div class="col mb-4">
+                            <div class="card border-light">
+                              <img class="card-img-top" src="{{order.image_cover.url }}" width="300" height="auto">
+                              <div class="card-body">
+                                <h5 class="card-title">{{ order.title }}</h5>
+                                <p class="card-text">{{ order.description }}</p>
+                              </div>
+                              <div class="card-footer bg-transparent border-light">
+                                  <a class="btn btn-outline-success col-12" href="{% url 'order_and_suggestion_view' url=order.id %}">{% trans "Details" %}</a>
+                              </div>
+                            </div>
+                          </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="row " style="width: 100%;">
+                <div class="col mb-4"  align="center">
+                    <small>
+                        {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
+                        <a href="{% url 'order_create' %}">{% trans "here." %}</a>
+                    </small>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        <div class="tab-pane fade" id="nav-selected" role="tabpanel" aria-labelledby="nav-selected-tab">
+            {% if orders %}
+            {% else %}
+            <div class="row " style="width: 100%;">
+                <div class="col mb-4"  align="center">
+                    <small>
+                        {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
+                        <a href="{% url 'order_create' %}">{% trans "here." %}</a>
+                    </small>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

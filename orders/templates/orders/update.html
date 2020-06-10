@@ -1,0 +1,80 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block title %}{% trans "Update Order" %}{% endblock %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'orders/order_update.css' %}">
+    <div class="ccc">
+        <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'orders' %}">All orders</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'order_detail' pk=order.pk %}">Order {{ order.title }}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Update order</li>
+              </ol>
+         </nav>
+        <legend class="border-bottom mb-4">{% trans "Update Order" %}</legend>
+        <form class="text-left" method="POST" enctype="multipart/form-data">
+           <div class="aaa">
+               <div class="content-section">
+                    {% csrf_token %}
+                    <fieldset class="form-group">
+                        <div class="form-title">
+                        {{ form.title|as_crispy_field}}
+                        <small>Измените заголовок закза</small>
+                        </div>
+
+                        <div class="form-description">
+                            {{ form.description|as_crispy_field}}
+                            <small>Измените описание заказа.</small>
+                        </div>
+
+                        <div class="form-files">
+                            <small></small>
+                        </div>
+
+                        <div class="form-amount">
+                            {{ form.amount|as_crispy_field}}
+                            <small>Измените количество изделий.</small>
+                        </div>
+
+                        <div class="form-city">
+                            {{ form.city|as_crispy_field}}
+                            <small>Измените город в который отправится заказ</small>
+                        </div>
+
+                        <div class="form-image">
+                            {{ form.pdf_view|as_crispy_field}}
+                            <small>Измените обложку заказа.</small>
+                        </div>
+
+                        {% for file in files %}
+                            <div class="form-files">
+                                {{ file}}
+                                <small>Изменить файл</small>
+                            </div>
+                        {% endfor %}
+
+                        <div class="form-lead_time">
+                            {{ form.lead_time|as_crispy_field}}
+                            <small>Измените сроки выполнения работ.</small>
+                        </div>
+
+                        <div class="form-proposed_budget">
+                            {{ form.proposed_budget|as_crispy_field}}
+                            <small>Измените предположительный бюджет.</small>
+                        </div>
+
+                        <div class="form-categories">
+                            {{ form.categories|as_crispy_field}}
+                            <small>Измените категории заказа.</small>
+                        </div>
+                    </fieldset>
+                </div>
+                <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans "Update" %}</button>
+            </div>
+        </form>
+    </div>
+{% endblock %}

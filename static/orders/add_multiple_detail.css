@@ -1,0 +1,14 @@
+body {
+    height: 60rem;
+}
+
+
+.detailform {
+    width: 58%;
+    float: left;
+}
+
+.order {
+    width: 40%;
+    float: left;
+}

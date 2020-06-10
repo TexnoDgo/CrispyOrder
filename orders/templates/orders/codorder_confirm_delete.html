@@ -1,0 +1,32 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Order" %} № {{ order.id }}{% endblock %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'orders/order_style.css' %}">
+
+    <div class="vso">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Home</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'orders' %}">All orders</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Delete Order - {{ codorder.title }}</li>
+          </ol>
+        </nav>
+        <div class="jumbotron">
+            <h1 class="display-4">Удаление заказа {{ codorder.title }}</h1>
+            <p class="lead">Вы уверены что хотите удалить заказ? Все предложение по нему будут аннулированы.</p>
+            <hr class="my-4">
+            <p>Если вы не получили отклика на ваш заказ не отчаивайтесь, укажите более подробную информацию в заказе
+                чтобы производителям было проще ответить вам.</p>
+            <form class="group-form" method="post">
+                {% csrf_token %}
+                 <p class="lead">
+                     <button class="btn btn-outline-danger btn-lg" type="submit">Да, Удалить!</button>
+                     <a class="btn btn-outline-secondary btn-lg" href="{% url 'order_detail' object.id %}" role="button">Отменить</a>
+                 </p>
+            </form>
+        </div>
+    </div>
+{% endblock %}

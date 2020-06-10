@@ -1,0 +1,28 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Log Out" %}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <legend class="border-bottom mb-4" align="center">{% trans "You have been logged out" %}</legend>
+        <div class="jumbotron jumbotron-fluid">
+              <div class="container">
+                <h1 class="display-4">{% trans "Thank you for using Crispy Machine" %}</h1>
+                <p class="lead">
+                    {% trans "Stay tuned for " %}
+                    <a href="">{% trans "new orders."%}</a>
+                    {% trans "Also follow the " %}
+                    <a href="">{% trans "news " %}</a>
+                    {% trans "and " %}
+                    <a href="">{% trans "site updates." %}</a>
+                </p>
+              </div>
+            </div>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                <a href="{% url 'login' %}">Log In Again</a>
+            </small>
+        </div>
+    </div>
+{% endblock %}
+

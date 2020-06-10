@@ -1,0 +1,164 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}{% trans "Create Group Order" %}{% endblock %}
+
+{% block content %}
+
+
+<link rel="stylesheet" href="{% static 'orders/style.css' %}">
+
+    <div class="container">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+                <li class="breadcrumb-item active" aria-current="page">Мясорубка</li>
+            </ol>
+        </nav>
+
+        <legend class="border-bottom mb-1" align="center">"МЯСОРУБКА"</legend>
+        <a href="{% url 'view_archives' %}">Список архивов</a>
+        <div class="jumbotron">
+            <h1 class="display-4">{% trans "Create Group Order" %}</h1>
+            <p class="lead">This is a simple hero unit, a simple jumbotron-style component for calling extra attention to featured content or information.</p>
+            <hr class="my-4">
+            <form class="group-file" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{% trans "Download archive with details" %}</p>
+
+            {{ form|crispy }}
+            <button type="submit" class="btn btn-outline-primary">Загрузить</button>
+        </form>
+
+        </div>
+
+    </div>
+{% endblock %}
+|as_crispy_field
+
+<!-- Привью обложки jpg
+<tr class="tr2">
+    <td colspan="3" class="tr2">
+        <img id="output" width="600" height="auto"/>
+        <script>
+          var loadFile = function(event) {
+            var output = document.getElementById('output');
+            output.src = URL.createObjectURL(event.target.files[0]);
+            output.onload = function() {
+              URL.revokeObjectURL(output.src) // free memory
+            }
+          };
+        </script>
+    </td>
+    <td>
+        <small>Проверте обложку заказа.</small>
+    </td>
+</tr>
+-->
+
+                <!--
+                <div class="container">
+                    <div class="content-section">
+                        {% csrf_token %}
+                        <table class="order_create_table">
+                            <tr>
+                                <td colspan="4">
+                                    <h3>{% trans "СОЗДАТЬ ЗАКАЗ" %}</h3>
+                                </td>
+                            </tr>
+                            <tr class="tr1">
+                                <td colspan="3" >
+                                    {{ order_form.title|as_crispy_field}}
+                                </td>
+                                <td>
+                                    <small>Введите заголовок заказа. Например: Изготовить токарную детать, выполнить токарную обработку</small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    {{ order_form.description|as_crispy_field}}
+                                </td>
+                                <td>
+                                    <small>Опишите подробно работу которую необходимо выполнить.</small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="1">
+                                    {{ order_form.amount|as_crispy_field}}
+                                </td>
+                                <td>
+                                    <small>Укажите количество изделий.</small>
+                                </td>
+                                <td colspan="1">
+                                    {{ order_form.city|as_crispy_field}}
+                                </td>
+                                <td>
+                                    <small>Выберите город в который отправится заказ</small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <div class="form-image" id="order-image">
+                                        <input type="file" name="pdf_view" onchange="loadFile(event)">
+                                    </div>
+
+                                </td>
+                                <td>
+                                    <small>Выберите обложку заказка</small>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td >
+                                    <div class="form-files">
+                                        {{ order_form.files|as_crispy_field}}
+
+                                    </div>
+                                </td>
+                                <td >
+                                    <div class="form-files">
+                                        {{ order_form.files|as_crispy_field}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="form-files">
+                                        {{ order_form.files|as_crispy_field}}
+                                    </div>
+                                </td>
+                                <td>
+                                    <small>Выберите Чертеж</small>
+                                </td>
+                            </tr>
+
+                            <tr>
+                                <td colspan="3">
+                                    {{ order_form.lead_time|as_crispy_field}}
+                                </td>
+                                <td>
+                                    <small>Установите сроки выполнения работ.</small>
+                                </td>
+                            </tr>
+                            <tr class="tr1">
+                                <td colspan="3">
+                                    {{ order_form.proposed_budget|as_crispy_field}}
+                                </td>
+                                <td>
+                                    <small>Укажите предположительный бюджет.</small>
+                                </td>
+                            </tr>
+                            <tr class="tr1">
+                                <td colspan="3">
+                                    {{ order_form.categories|as_crispy_field}}
+                                </td>
+                                <td>
+                                    <small>Выберите категории под которые подпадает ваш заказ.</small>
+                                </td>
+                            </tr>
+
+                        </table>
+                        <hr>
+                        <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans "CREATE" %}</button>
+                        <hr>
+                    </div>
+                </div>
+                -->

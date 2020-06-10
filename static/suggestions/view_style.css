@@ -1,0 +1,14 @@
+body {
+    height: 50rem;
+}
+
+
+.suggestion {
+    width: 50%;
+    float: left;
+}
+
+.dialog {
+    width: 50%;
+    float: left;
+}

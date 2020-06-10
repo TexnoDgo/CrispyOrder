@@ -1,0 +1,101 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "CrispyMachine - Filtered orders" %}{% endblock %}
+{% load static %}
+{% load bootstrap_pagination %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'orders/style.css' %}">
+    <div class="page">
+        <!--Навигация-->
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'orders' %}">{% trans "All Orders" %}</a></li>
+                <li class="breadcrumb-item active" aria-current="page">
+                    {% if filCat %}
+                        {% trans "Orders categories: " %}"{{ filCat }}"
+                    {% else %}
+                        {% trans "City orders: " %}"{{ filcit }}"
+                    {% endif %}
+                </li>
+            </ol>
+        </nav>
+        <!--Навигация-->
+
+        <!--Уведомления-->
+        <div class="container">
+            <legend class="border-bottom mb-4" align="center">{% trans "Filtered orders by:" %}
+                {{ filCat }}
+                {{ filcit }}
+            </legend>
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        </div>
+        <!--Уведомления-->
+
+        <!--Фильтры-->
+        <div class="orders-filter">
+            <a class="btn btn-outline-success col-12 mb-2" href="{% url 'orders' %}">{% trans "All Orders" %}</a>
+            <div class="list-group">
+                  <li class="list-group-item list-group-item list-group-item-secondary">
+                    {% trans "Category Filtering" %}
+                  </li>
+                  {% for category in filters %}
+                        <a href="{% url 'order_category_view' pk=category.pk %}"
+                           class="list-group-item list-group-item-action list-group-item">
+                            {{ category.title }}
+                        </a>
+                  {% endfor %}
+            </div>
+
+            <div class="list-group">
+                <li class="list-group-item list-group-item list-group-item-secondary">
+                    {% trans "City Filtering" %}
+                </li>
+                {% for city in all_city %}
+                    <a href="{% url 'order_city_view' pk=city.pk %}" class="list-group-item list-group-item-action list-group-item">
+                        {{ city.title }}
+                    </a>
+                {% endfor %}
+            </div>
+
+        </div>
+        <!--Фильтры-->
+
+        <!--Заказы-->
+        <div class="orders-views">
+            <div class="row row-cols-1 row-cols-md-3 ml-3 mt-1">
+                {% for order in all_orders.object_list %}
+                  <div class="col mb-4">
+                    <div class="card border-dark">
+                      <img class="card-img-top" src="{{order.image_view.url }}" width="300" height="auto">
+                      <div class="card-body">
+                        <h5 class="card-title">{{ order.title }}</h5>
+                        <p class="card-text">{{ order.description }}</p>
+                      </div>
+                      <div class="card-footer bg-transparent border-dark">
+                          <a class="btn btn-outline-success col-12" href="{{order.id}}">{% trans "Details" %}</a>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+            </div>
+        </div>
+        <!--Заказы-->
+
+        <!--Пагинация-->
+        <div class="pagination">
+            {% bootstrap_paginate all_orders range=10 %}
+        </div>
+        <!--Пагинация-->
+
+
+    </div>
+{% endblock %}
+

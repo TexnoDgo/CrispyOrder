@@ -1,0 +1,29 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block title %}{% trans "SingUp" %}{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <h1 class="h3 mb-3 font-weight-normal">{% trans "Please sign in" %}</h1>
+        <legend class="border-bottom mb-4">{% trans "Registration" %}</legend>
+        <form class="text-left" method="POST">
+          <div class="container">
+          <img class="mb-4" src="/docs/4.4/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72">
+          <div class="content-section">
+                {% csrf_token %}
+                <fieldset class="form-group">
+                    {{ form|crispy }}
+                </fieldset>
+          </div>
+          <button class="btn btn-lg btn-primary btn-block" type="submit">{% trans "Sign in" %}</button>
+        </div>
+        </form>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                Already Have An Account? <a class="ml-2" href="{% url 'login' %}">Log In</a>
+            </small>
+        </div>
+    </div>
+{% endblock %}
+

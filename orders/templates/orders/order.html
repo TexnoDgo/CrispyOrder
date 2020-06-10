@@ -1,0 +1,188 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Order" %} № {{ order.id }}{% endblock %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'orders/order_style.css' %}">
+
+    <div class="vso">
+        <!--Навигация-->
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'orders' %}">{% trans "All orders" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "Order: " %} "{{ order.title }}"</li>
+          </ol>
+        </nav>
+        <!--Навигация-->
+
+        <!--Предложения для автора-->
+        <div class="vs">
+            {% if user == order.author %}
+                {% for form in suggestions %}
+                    <div class="card border-dark mb-3" style="max-width: 32rem;">
+                        <div class="card-header bg-transparent border-dark">
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    {% trans "Offer created: " %} {{ form.date_create }}
+                                </small>
+                                <small class="text-muted col">
+                                    {% trans "Proposal author: " %} {{ form.author }}
+                                </small>
+                                <small class="text-muted ml-3">
+                                    {% for profile in profiles %}
+                                        {% if profile.user == form.author %}
+                                            {% trans "Rating: " %}
+                                            <span class="badge badge-success">{{ profile.rating }}</span>
+                                        {% endif %}
+                                    {% endfor %}
+                                </small>
+                            </p>
+                        </div>
+                        <div class="card-body text-dark">
+                            <p class="card-text">{{ form.offer_description }}</p>
+                        </div>
+                        <div class="card-footer bg-transparent border-dark">
+                            <p class="card-text">
+                                <small class="text-muted">
+                                    {% trans "Deadline: " %}{{ form.deadline }}
+                                </small>
+                                <small class="text-muted col ml-5">
+                                    {% trans "Offer price: " %}{{ form.offer_price}}&#8372;
+                                </small>
+                                <small class="text-muted ml-5">
+                                    <a href="/suggestion/view/{{form.id}}" type="button"
+                                       class="btn btn-outline-info btn-sm">
+                                        {% trans "Details" %}
+                                    </a>
+                                </small>
+                            </p>
+                        </div>
+                    </div>
+                {% endfor %}
+            {% elif user != order.author %}
+                <div class="card" style="width: 32rem;" align="center">
+                  <ul class="list-group list-group-flush">
+                    <a href="{% url 'suggestion' pk=order.pk %}"
+                       class="list-group-item list-group-item-action list-group-item">
+                        {% trans "Leave an offer" %}
+                    </a>
+                  </ul>
+                </div>
+            {% endif %}
+        </div>
+        <!--Предложения для автора-->
+
+        <!--Заказ-->
+        <div class="vo">
+            <div class="card mb-3">
+                <div class="card-header bg-transparent border-dark">
+                    <p class="card-text">
+                        <small class="text-muted col">
+                            {% trans "Order created: " %}{{ order.date_create }}
+                        </small>
+
+                        <small class="text-muted ml-5 col">
+                            {% trans "Order author: " %} {{ order.author }}
+                        </small>
+                        <small class="text-muted ml-5 col">
+                            {% trans "Order City: " %} {{ order.city }}
+                        </small>
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted col">
+                            {% trans "Complete work before: " %} {{ order.lead_time }}
+                        </small>
+                        <small class="text-muted ml-5 col">
+                            {% trans "Order Budget: " %} {{ order.proposed_budget }}
+                        </small>
+
+                        <small class="text-muted ml-4">
+                            {% trans "Number of items: " %}{{ order.amount }} {% trans "units." %}
+                        </small>
+                    </p>
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ order.title }}
+                        <small>
+                            {% if order.status == 'In discussion' %}
+                                <span class="badge badge-pill badge-warning">{{ order.status }}</span>
+                            {% elif order.status == 'In work' %}
+                                <span class="badge badge-pill badge-success">{{ order.status }}</span>
+                            {% elif order.status == 'Done' %}
+                                <span class="badge badge-pill badge-secondary">{{ order.status }}</span>
+                            {% elif order.status == 'Canceled' %}
+                                <span class="badge badge-pill badge-danger">{{ order.status }}</span>
+                            {% endif %}
+                        </small>
+                    </h5>
+                    <p class="card-text">{{ order.description }}</p>
+
+                </div>
+                <a href="{{ order.pdf_view.url }}">
+                    <img src="{{order.image_view.url}}" class="card-img-top" alt="...">
+                </a>
+                <div class="card-body">
+                    <small class="text-muted">
+                        {% trans "Order files" %}
+                    </small>
+                    <small>
+                       {% for file in files %}
+                            <a href="{{ file.file.url }}" class="badge badge-primary" target="blank">
+                                {{ file }}
+                            </a>
+                        {% endfor %}
+                    </small>
+                </div>
+                <div class="card-footer bg-transparent border-dark">
+                        <p class="card-text" align="center">
+                            <small  class="col">
+                                {% if user == order.author %}
+                                    {% if order.status == 'In work' %}
+                                        <a href="{% url 'status_ready' object.id %}"
+                                           class="btn btn-primary  btn-lg active btn-sm"
+                                           role="button" aria-pressed="true">
+                                            {% trans "Order completed" %}
+                                        </a>
+                                    {% elif order.status == 'Done' %}
+                                        <a href="{% url 'status_ready' object.id %}"
+                                           class="btn btn-secondary btn-lg active btn-sm"
+                                           role="button" aria-pressed="true">
+                                            {% trans "Modify order" %}
+                                        </a>
+                                    {% elif order.status == 'In discussion' %}
+                                        <button class="btn btn-primary  btn-lg active btn-sm"
+                                           role="button" aria-pressed="true" disabled>
+                                            {% trans "Order completed" %}
+                                        </button>
+                                    {% endif %}
+                                {% endif %}
+                            </small>
+                            <small class="col ml-2">
+                                {% if user == order.author %}
+                                    <a href="{% url 'order_update' object.id %}"class="btn btn-warning btn-lg active btn-sm" role="button" aria-pressed="true">
+                                        {% trans "Change Order" %}
+                                    </a>
+                                {% endif %}
+                            </small>
+                            <small class="col ml-2">
+                                {% if user == order.author %}
+                                    <a href="{% url 'order_delete' object.id %}" class="btn btn-danger btn-lg active btn-sm" role="button" aria-pressed="true">
+                                        {% trans "Delete order" %}
+                                    </a>
+                                {% endif %}
+                            </small>
+                            <small class="col ml-2">
+                                <a href="{% url 'send_order_to_friend' pk=order.pk %}"  class="btn btn-light btn-lg active btn-sm" role="button">
+                                    {% trans "Share order" %}
+                                </a>
+                            </small>
+                        </p>
+                    </div>
+            </div>
+        </div>
+        <!--Заказ-->
+    </div>
+{% endblock %}

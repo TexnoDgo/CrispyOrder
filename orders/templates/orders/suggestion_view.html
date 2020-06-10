@@ -1,0 +1,223 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block title %}{% trans "Order" %} № {{ order.id }}{% endblock %}
+{% load static %}
+
+{% block content %}
+
+    <!-- Load Style -->
+    <link rel="stylesheet" href="{% static 'orders/order_style.css' %}">
+    <!-- Load Style -->
+
+    <div class="container">
+        <!--Навигация-->
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">Главная</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'orders' %}">Все заказы</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'order_detail' pk=suggestion_order.pk %}">Заказ: "{{ suggestion_order.title }}"</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Предложение: "{{ suggestion.pk }}"</li>
+          </ol>
+        </nav>
+    </div>
+
+    <!-- Suggestion -->
+    <div class="container">
+        <li class="list-group-item list-group-item list-group-item-dark">
+            Предложение
+        </li>
+        <li class="list-group-item list-group-item list-group-item-secondary">
+            <table class="table2">
+                <tbody>
+                    <tr >
+                        <td >Автор предложения:</td>
+                        <td>
+                            <h4><span class="badge badge-secondary lg">{{ suggestion.author }}</span></h4>
+                        </td>
+                        <td>Дата создания предложения: </td>
+                        <td>
+                            <h4><span class="badge badge-secondary lg">{{ suggestion.date_create }}</span></h4>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Описание предложения:</td>
+                        <td colspan="3">
+                            <h5><span class="badge badge-secondary lg">{{ suggestion.offer_description }}</span></h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Предложенная стоимость:</td>
+                        <td>
+                            <h5><span class="badge badge-secondary lg">{{ suggestion.offer_price }}&#8372;</span></h5>
+                        </td>
+                        <td>Срок выполнения до:</td>
+                        <td>
+                            <h5><span class="badge badge-secondary lg">{{ suggestion.deadline }}</span></h5>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Состояние предложения:</td>
+                        <td>
+                            {% if suggestion.selected_offer %}
+                                <h5><span class="badge badge-success">Принят</span></h5>
+                            {% else %}
+                                <h5><span class="badge badge-warning">Отменен</span></h5>
+                            {% endif %}
+                        </td>
+                        <td>
+                            Статус предложения:
+                        </td>
+                        <td>
+                            <span class="badge badge-success">{{ suggestion.status }}</span>
+                        </td>
+                    </tr>
+                    <!--
+                    {% if suggestion_order.author == user %}
+                        {% if true_sug == 0 %}
+                            <tr>
+                                <td colspan="4">
+                                    <a href="{% url 'status_in_work' pk=suggestion.pk %}">
+                                        <button class="btn btn-success" id="click_button">
+                                            -----------------------Выбрать----------------------
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% else %}
+                            {% if form.selected_offer == True %}
+                                {% if form.status == 'В работe' %}
+                                    <td colspan="2">
+                                        <a href="{% url 'status_in_work' pk=form.pk %}">
+                                            <button class="btn btn-danger" id="cancel_button">
+                                                -----------------------------Отменить------------------------------
+                                            </button>
+                                        </a>
+                                    </td>
+                                {% elif form.status == 'Выполнено' %}
+                                    <td colspan="2">
+                                        <a href="#">
+                                            <button class="btn btn-primary" id="5stars">
+                                                --------------------Оценить производителя-----------------------
+                                            </button>
+                                        </a>
+                                    </td>
+                                {% endif %}
+                            {% else %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                    -->
+                    {% if suggestion_order.author == user %}
+                        {% if suggestion.status == 'В обсуждении'  %}
+                            <tr>
+                                <td colspan="4">
+                                    <a href="{% url 'status_in_work' pk=suggestion.pk %}">
+                                        <button class="btn btn-success" id="click_button">
+                                            -----------------------Выбрать----------------------
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% elif suggestion.status == 'В работe' %}
+                            <tr>
+                                <td colspan="4">
+                                    <a href="{% url 'status_in_work' pk=suggestion.pk %}">
+                                        <button class="btn btn-danger" id="cancel_button">
+                                            -----------------------------Отменить------------------------------
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% elif suggestion.status == 'Выполнено' %}
+                            <tr>
+                                <td colspan="4">
+                                    <a href="#">
+                                        <button class="btn btn-primary" id="5stars">
+                                            --------------------Оценить производителя-----------------------
+                                        </button>
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endif %}
+                    {% endif %}
+                </tbody>
+            </table>
+        </li>
+    </div>
+    <!-- Suggestion -->
+
+    <!-- Dialog -->
+    <div class="container">
+
+        <div class="card rare-wind-gradient chat-room">
+            <div class="card-body">
+                <div class="row px-lg-2 px-2">
+                    <div class="col-md-6 col-xl-12 pl-md-3 px-lg-auto px-0">
+                        <div class="chat-message">
+
+                            <!-- CHAT -->
+                            <ul class="list-unstyled chat-1 scrollbar-light-blue">
+                                {% for mes in message1 %}
+                                    {% if mes.member == suggestion.author %}
+                                        <li class="d-flex justify-content-between mb-4">
+                                        <img src="{{ suggestion.author.profile.image.url }}" alt="avatar"
+                                             class="avatar rounded-circle mr-2 ml-lg-3 ml-0 z-depth-1"
+                                             width="150" height="150">
+                                            <div class="chat-body white p-3 ml-2 z-depth-1">
+                                            <div class="header">
+                                                  <strong class="primary-font">{{ mes.member }}</strong>
+                                                  <small class="pull-right text-muted"><i class="far fa-clock"></i>
+                                                      {{ mes.pub_date }}
+                                                  </small>
+                                            </div>
+                                            <hr class="w-100">
+                                            <p class="mb-0">
+                                              {{mes.message}}
+                                            </p>
+                                            </div>
+                                        </li>
+                                    {% else %}
+                                        <li class="d-flex justify-content-between mb-4">
+                                            <div class="chat-body white p-3 z-depth-1">
+                                                <div class="header">
+                                                    <strong class="primary-font">{{ mes.member }}</strong>
+                                                    <small class="pull-right text-muted"><i class="far fa-clock"></i>
+                                                        {{ mes.pub_date }}
+                                                    </small>
+                                                </div>
+                                                <hr class="w-100">
+                                                <p class="mb-0">
+                                                {{mes.message}}
+                                                </p>
+                                            </div>
+                                        <img src="{{ suggestion_order.author.profile.image.url }}" alt="avatar"
+                                             class="avatar rounded-circle mr-0 ml-3 z-depth-1"
+                                             width="150" height="150">
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </ul>
+                            <!-- CHAT -->
+
+                            <form class="form-group" method="post">
+                                {% csrf_token %}
+                                <div class="white">
+                                    <div class="basic-textarea">
+                                        <textarea class="form-control pl-2 my-0" id="exampleFormControlTextarea2" rows="3" placeholder="Type your message here..." name="message"></textarea>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-outline-pink btn-rounded btn-sm waves-effect waves-dark float-right">Отправить</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Dialog -->
+
+
+
+
+{% endblock %}

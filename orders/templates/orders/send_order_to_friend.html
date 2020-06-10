@@ -1,0 +1,63 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}{% trans "Create Order" %}{% endblock %}
+
+{% block content %}
+<div class="card mb-3">
+    <div class="card-header bg-transparent border-dark">
+        <p class="card-text">
+            <small class="text-muted col">
+                {% trans "Order created: " %}{{ order.date_create }}
+            </small>
+
+            <small class="text-muted ml-5 col">
+                {% trans "Order author: " %} {{ order.author }}
+            </small>
+            <small class="text-muted ml-5 col">
+                {% trans "Order City: " %} {{ order.city }}
+            </small>
+        </p>
+        <p class="card-text">
+            <small class="text-muted col">
+                {% trans "Complete work before: " %} {{ order.lead_time }}
+            </small>
+            <small class="text-muted ml-5 col">
+                {% trans "Order Budget: " %} {{ order.proposed_budget }}
+            </small>
+
+            <small class="text-muted ml-4">
+                {% trans "Number of items: " %}{{ order.amount }} {% trans "units." %}
+            </small>
+        </p>
+    </div>
+    <div class="card-body">
+        <h5 class="card-title">
+            {{ order.title }}
+            <small>
+                {% if order.status == 'In discussion' %}
+                    <span class="badge badge-pill badge-warning">{{ order.status }}</span>
+                {% elif order.status == 'In work' %}
+                    <span class="badge badge-pill badge-success">{{ order.status }}</span>
+                {% elif order.status == 'Done' %}
+                    <span class="badge badge-pill badge-secondary">{{ order.status }}</span>
+                {% elif order.status == 'Canceled' %}
+                    <span class="badge badge-pill badge-danger">{{ order.status }}</span>
+                {% endif %}
+            </small>
+        </h5>
+        <p class="card-text">{{ order.description }}</p>
+
+    </div>
+    <a href="{{ order.pdf_view.url }}">
+        <img src="{{order.image_view.url}}" class="card-img-top" alt="...">
+    </a>
+</div>
+<form class="email-send" method="post">
+    {% csrf_token %}
+    {{form.email|as_crispy_field}}
+    <button type="submit" class="btn btn-primary">Отправить</button>
+</form>
+{% endblock %}
+

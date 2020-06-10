@@ -1,0 +1,187 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block title %}{% trans "CrispyMachine - Create Order" %}{% endblock %}
+
+{% block content %}
+
+
+<link rel="stylesheet" href="{% static 'orders/style.css' %}">
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Create Order" %}</li>
+    </ol>
+</nav>
+<div class="jumbotron jumbotron-fluid">
+
+    <div class="container">
+        <h1 class="display-5" align="center">{% trans "Create a new order" %}</h1>
+        <p class="lead ml-5">
+            {% trans "Below is the order creation form, fill it out, read the tips and tricks carefully. For more detailed instructions on creating orders, click here" %}
+            <a href="#">{% trans "read more." %}</a>
+        </p>
+        <hr>
+        <form class="text-left" method="POST" enctype="multipart/form-data">
+            <div class="content-section">
+                    {% csrf_token %}
+                    <table class="order_create_table">
+                        <tr class="tr1">
+                            <td colspan="2" >
+                                {{ order_form.title|as_crispy_field}}
+                            </td>
+                            <td colspan="2">
+                                <small>
+                                    {% trans "Enter the order header. For example: 'Make a turning part'," %}
+                                    {% trans "'Perform a turning', 'Perform a welding of a structure'." %}
+                                </small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                {{ order_form.description|as_crispy_field}}
+                            </td>
+                            <td>
+                                <small>
+                                    {% trans "Describe in detail the work that needs to be done." %}
+                                    {% trans "Specify special requirements, if necessary, describe the technical process." %}
+                                </small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                {{ order_form.amount|as_crispy_field}}
+                            </td>
+                            <td colspan="2">
+                                <small>{% trans "Indicate the number of products to be manufactured." %}</small>
+                            </td>
+                        </tr>
+                        <tr>
+
+                            <td colspan="2">
+                                {{ order_form.city|as_crispy_field}}
+                            </td>
+                            <td colspan="2">
+                                <small>{% trans "Select the city where the order will be sent." %}</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <!--
+                                <div class="form-image" id="order-image">
+                                    <input type="file" name="pdf_view" onchange="loadFile(event)" id="123">
+                                </div>
+                                -->
+                                <div class="input-group mb-2 mt-2">
+                                  <div class="input-group-prepend">
+                                    <span class="input-group-text" id="inputGroupFileAddon01">
+                                        {% trans "Upload" %}
+                                    </span>
+                                  </div>
+                                  <div class="custom-file">
+                                    <input type="file" class="custom-file-input"
+                                           id="pdf_view" aria-describedby="inputGroupFileAddon01"
+                                           name="pdf_view">
+                                    <label class="custom-file-label" for="pdf_view">
+                                        {% trans "Choose file" %}
+                                    </label>
+                                  </div>
+                                </div>
+                            </td>
+                            <td colspan="2">
+                                <small>{% trans "Choose cover order" %}</small>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td >
+                                <div class="form-files">
+                                    {{ order_form.files}}
+                                </div>
+                            </td>
+                            <td >
+                                <div class="form-files">
+                                    {{ order_form.files}}
+                                </div>
+                            </td>
+                            <td>
+                                <div class="form-files">
+                                    {{ order_form.files}}
+                                </div>
+                            </td>
+                            <td>
+                                <small>{% trans "Add additional files, such as drawings, models, sketches" %}</small>
+                            </td>
+                        </tr>
+
+                        <!-- Привью обложки jpg
+                        <tr class="tr2">
+                            <td colspan="3" class="tr2">
+                                <img id="output" width="600" height="auto"/>
+                                <script>
+                                  var loadFile = function(event) {
+                                    var output = document.getElementById('output');
+                                    output.src = URL.createObjectURL(event.target.files[0]);
+                                    output.onload = function() {
+                                      URL.revokeObjectURL(output.src) // free memory
+                                    }
+                                  };
+                                </script>
+                            </td>
+                            <td>
+                                <small>Проверте обложку заказа.</small>
+                            </td>
+                        </tr>
+                        -->
+
+                        <tr>
+                            <td colspan="2">
+                                {{ order_form.lead_time|as_crispy_field}}
+                            </td>
+                            <td colspan="2">
+                                <small>{% trans "Set deadlines." %}</small>
+                            </td>
+                        </tr>
+                        <tr class="tr1">
+                            <td colspan="2">
+                                {{ order_form.proposed_budget|as_crispy_field}}
+                            </td>
+                            <td colspan="2">
+                                <small>{% trans "Indicate estimated budget." %}</small>
+                            </td>
+                        </tr>
+                        <tr class="tr1">
+                            <td colspan="2">
+                                {{ order_form.categories|as_crispy_field}}
+                            </td>
+                            <td colspan="2">
+                                <small>
+                                    {% trans "Select the categories to which your order falls." %}
+                                    {% trans "You can select several categories." %}
+                                    {% trans "To do this, click on them in turn holding the 'Ctrl' button." %}
+                                </small>
+                            </td>
+                        </tr>
+
+                    </table>
+                    <div class="col-2 ml-4 mt-3">
+                        <small>
+                            {% trans " * - fields are required" %}
+                        </small>
+                    </div>
+                    <hr>
+                    <div align="center">
+                        <button class="btn btn-outline-success btn-lg ml-2" type="submit">
+                            {% trans "Create order" %}
+                        </button>
+                        <button type="reset" class="btn btn-outline-secondary btn-lg ml-4">
+                            {% trans "Cancel" %}
+                        </button>
+                    </div>
+
+                </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
+

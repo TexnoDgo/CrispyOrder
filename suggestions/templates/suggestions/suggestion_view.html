@@ -1,0 +1,174 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% load crispy_forms_tags %}
+{% block title %}{% trans "Order" %} № {{ order.id }}{% endblock %}
+{% load static %}
+
+{% block content %}
+    <!-- Load Style -->
+    <link rel="stylesheet" href="{% static 'suggestions/view_style.css' %}">
+    <!-- Load Style -->
+    <!--Навигация-->
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'all_cod_order_view' %}">{% trans "All orders" %}</a></li>
+        <li class="breadcrumb-item"><a href="{% url 'order_and_suggestion_view' url=order.pk %}">
+            {% trans "Order: " %}{{ order.title }}
+        </a></li>
+        <li class="breadcrumb-item active" aria-current="page">{% trans "Suggestion: " %}{{ suggestion.pk }}</li>
+      </ol>
+    </nav>
+    <!--Навигация-->
+    <!-- Suggestion -->
+    <div class="suggestion col">
+        <div class="card bg-light mb-3" style="max-width: 64rem; height: 20rem;">
+            <div class="card-header" align="center">
+                {% trans "Suggestion |" %}
+                {% trans "Author: " %}
+                {{ suggestion.author }}
+            </div>
+            <div class="card-body">
+                <p class="card-text">{{ suggestion.offer_description }}</p>
+                <p>{% trans "Budget: " %} {{ suggestion.offer_price }}</p>
+                <p>{% trans "Deadline: " %}{{ suggestion.deadline }}</p>
+            </div>
+        </div>
+        <div class="order">
+            <div class="card bg-light mb-3" style="max-width: 62rem;">
+                <div class="card-header bg-light mb-3" align="center">
+                        {% trans "Order" %}
+                </div>
+                <div class="card-body">
+                    <h5 class="card-title">
+                        {{ order.title }}
+                        <small>
+                            {% if order.status == 'Discussion' %}
+                                <span class="badge badge-pill badge-warning">{{ order.status }}</span>
+                            {% elif order.status == 'InWork' %}
+                                <span class="badge badge-pill badge-success">{{ order.status }}</span>
+                            {% elif order.status == 'Done' %}
+                                <span class="badge badge-pill badge-secondary">{{ order.status }}</span>
+                            {% elif order.status == 'Canceled' %}
+                                <span class="badge badge-pill badge-danger">{{ order.status }}</span>
+                            {% endif %}
+                        </small>
+                    </h5>
+                    <p class="card-text">{{ order.description }}</p>
+                </div>
+                <div class="col" align="center">
+                    <a href="{{ order.pdf_cover.url }}"
+                       class="list-group-item list-group-item-action list-group-item-primary">
+                        {% trans "PDF VIEW" %}
+                    </a>
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text">
+                        <small class="text-muted col-5">
+                            {% trans "Order created: " %}{{ order.date_create }}
+                        </small>
+                        <small class="text-muted col-5 ml-5">
+                            {% trans "Order author: " %} {{ order.author }}
+                        </small>
+                    </p>
+                    <p class="card-text">
+                        <small class="text-muted ml-5 col-5 mr-5">
+                            {% trans "Order City: " %} {{ order.city }}
+                        </small>
+                        <small class="text-muted ml-5">
+                            {% trans "Order Budget: " %} {{ order.proposed_budget }}
+                        </small>
+                     </p>
+                </div>
+                    <div class="card-footer bg-transparent border-dark" align="center">
+                        <div class="list-group list-group-horizontal">
+                            <a href="{% url 'order_and_suggestion_view' url=order.pk %}"
+                               class="list-group-item list-group-item-action list-group-item-primary">
+                                {% trans "Detail" %}
+                            </a>
+                            <a href="#" class="list-group-item list-group-item-action list-group-item-success disabled"
+                               tabindex="-1" aria-disabled="true">
+                                {% trans "Send friend" %}
+                            </a>
+                        </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+    <!-- Suggestion -->
+
+    <!-- Dialog -->
+    <div class="dialog col">
+        <div class="card" style="max-width: 64rem;">
+            <div class="card-header" align="center">
+                {% trans "Dialog:" %} {{suggestion.author}} | {{ order.author }}
+            </div>
+            <div class="card-body">
+                <div class="row px-lg-2 px-2">
+                    <div class="col-md-6 col-xl-12 pl-md-3 px-lg-auto px-0">
+                        <div class="chat-message">
+                            <!-- CHAT -->
+                            <ul class="list-unstyled chat-1 scrollbar-light-blue">
+                                <div class="overflow-auto" style="height: 32rem;">
+                                {% for mes in message1 %}
+                                    {% if mes.member == suggestion.author %}
+                                        <li class="d-flex justify-content-between mb-4">
+                                        <img src="{{ suggestion.author.profile.image.url }}" alt="avatar"
+                                             class="avatar rounded-circle mr-2 ml-lg-3 ml-0 z-depth-1"
+                                             width="150" height="150">
+                                            <div class="chat-body white p-3 ml-2 z-depth-1">
+                                            <div class="header">
+                                                  <strong class="primary-font">{{ mes.member }}</strong>
+                                                  <small class="pull-right text-muted"><i class="far fa-clock"></i>
+                                                      {{ mes.pub_date }}
+                                                  </small>
+                                            </div>
+                                            <hr class="w-100">
+                                            <p class="mb-0">
+                                              {{mes.message}}
+                                            </p>
+                                            </div>
+                                        </li>
+                                    {% else %}
+                                        <li class="d-flex justify-content-between mb-4">
+                                            <div class="chat-body white p-3 z-depth-1">
+                                                <div class="header">
+                                                    <strong class="primary-font">{{ mes.member }}</strong>
+                                                    <small class="pull-right text-muted"><i class="far fa-clock"></i>
+                                                        {{ mes.pub_date }}
+                                                    </small>
+                                                </div>
+                                                <hr class="w-100">
+                                                <p class="mb-0">
+                                                {{mes.message}}
+                                                </p>
+                                            </div>
+                                        <img src="{{ suggestion_order.author.profile.image.url }}" alt="avatar"
+                                             class="avatar rounded-circle mr-0 ml-3 z-depth-1"
+                                             width="150" height="150">
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                                </div>
+                            </ul>
+                            <!-- CHAT -->
+
+                            <form class="form-group" method="post">
+                                {% csrf_token %}
+                                <div class="white">
+                                    <div class="basic-textarea">
+                                        <textarea class="form-control pl-2 my-0" id="exampleFormControlTextarea2" rows="3" placeholder="Type your message here..." name="message"></textarea>
+                                    </div>
+                                </div>
+                                <button type="submit" class="btn btn-outline-pink btn-rounded btn-sm waves-effect waves-dark float-right">{% trans "SEND" %}</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dialog -->
+{% endblock %}

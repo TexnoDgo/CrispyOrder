@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+{% load i18n %}
+{% load static %}
+<html>
+ <head>
+     <link rel="stylesheet" href="{% static 'orders/style.css' %}">
+     <meta charset="utf-8" />
+     <title>Order create</title>
+ </head>
+ <body>
+     <div class="good">
+         <div class="header">
+             <h1 class="logo">O&R</h1>
+             <div class="header-text">
+                 <h2 class="headline">Создание заказа</h2>
+                 <p class="description">Опишите что вам необходимо сделать, какую работу выполнить. Получите предложения от изготовителей, посмотрите их профили, рейтинги, примеры выполненных работ и обсудите подробности заказа в чате.</p>
+             </div>
+         </div>                            
+         <div class="content">
+             <p>content</p>
+             <form class="form" method="post">
+                 
+                 {% csrf_token %}
+                 
+                 <div class="top-form">
+                     
+                     <div class="form-title">
+                        <h1>Введите название проекта</h1>
+                        <p>{{ form.title}}</p>
+                     </div>
+                     
+                     <div class="form-description">
+                        <h1>Опишите проект подробнее</h1>
+                        <p class="fdp">{{ form.description}}</p>
+                        <small>Напишите какую работу нужно выполнить или  укажите операции необходимые для изготовления вашего заказа</small>
+                     </div>
+                     
+                     <div class="form-files">
+                         <h1>Загрузите файлы необходимые для выполнения заказа</h1>
+                        <div class="form-files-frame">
+                            <button class="dtn-files">Загрузить файл +</button>
+                            <div class="form-files-dnd">
+                                <p>Перетащите сюда изображения или документы, которые могут быть полезны в качестве дополнения к краткому описанию вашего проекта.(6)</p>
+                            </div>
+                        </div>
+                     </div>
+                     
+                     <div class="form-categories">
+                        <h1>Укажите подходящие категории</h1>
+                        <p>{{ form.categories}}</p>
+                        <small>Например: Токарная; Фрезерная; Лазерная резка; пр </small>
+                     </div>
+                     
+                     <div class="form-amount">
+                        <h1>Укажите количество изделий</h1>
+                        <p>{{ form.amount}}</p>
+                     </div>
+                     
+                     <div class="form-city">
+                        <h1>Укажите город получения заказа</h1>
+                        <p>{{ form.city}}</p>
+                     </div>
+                     
+                     <div class="form-lead_time">
+                        <h1>Укажите сроки выполнения</h1>
+                        <p>{{ form.lead_time}}</p>
+                     </div>
+                     
+                     <div class="form-proposed_budget">
+                        <h1>Предполагаемый бюджет проекта</h1>
+                        <p>{{ form.proposed_budget}}</p>
+                     </div>
+                        
+                 </div>
+             </form>
+         </div>
+         <div class="footer">
+         </div>
+     </div>
+ </body>
+</html>
