@@ -7,7 +7,7 @@
 {% block content %}
     <link rel="stylesheet" href="{% static 'orders/all_order_style.css' %}">
             
-    <div class="block" style="height:100rem; background:#FFFFF0;">
+    <div class="block" style="height:100rem; background:#FFFFFF;">
       <div class="row">
           <div class="col-sm-2"></div>
           <div class="col-sm-8 mt-3" align="center" style="height:98rem; background:#FFFFF0;">
@@ -27,12 +27,6 @@
                     <li class="list-group-item list-group-item list-group-item-secondary">
                         {% trans "Category Filtering" %}
                     </li>
-                    <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref">
-                      <option selected>Choose...</option>
-                      {% for category in categories %}
-                      <option value="1">{{ category.title }}</option>
-                      {% endfor %}
-                    </select>
                     <div class="overflow-auto" style="height: 36rem;">
                         {% for category in categories %}
                             <li class="list-group-item list-group-item list-group-item">
@@ -93,7 +87,7 @@
                 {% endfor %}
                 </div>
                 <div class="pagination">
-                    {% bootstrap_paginate orders_all range=9 %}
+                    {% bootstrap_paginate orders_all range=6 %}
                 </div>   
               </div>
             </div>

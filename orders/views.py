@@ -585,13 +585,10 @@ def send_order_to_friend(request, pk):
 def all_cod_order_view(request):
     # Загрузка моделей
     orders_all = CODOrder.objects.all().order_by('-date_create')
-    ik = 1
-    for order in orders_all:
-      ik += 1
     categories = CODCategories.objects.all()
     city = CODCity.objects.all()
     # Пагинация
-    paginator = Paginator(orders_all, 9)
+    paginator = Paginator(orders_all, 6)
     try:
         page = int(request.GET.get('page', '1'))
     except:
@@ -604,7 +601,6 @@ def all_cod_order_view(request):
         'orders_all': posts,
         'categories': categories,
         'city': city,
-        'ik': ik,
     }
     return render(request, 'orders/AllOrderPage.html', context)
 
