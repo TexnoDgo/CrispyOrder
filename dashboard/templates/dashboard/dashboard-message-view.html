@@ -1,125 +1,126 @@
 {% extends "HomePage/base.html" %}
 {% load i18n %}
-{% block title %}{% trans "Dashboard" %}{% endblock %}
+{% block title %}{% trans "CO | MESSAGES" %}{% endblock %}
 {% load static %}
 {% load bootstrap_pagination %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'dashboard/style.css' %}">
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{% trans "You Messages" %}</li>
-  </ol>
-</nav>
-
-<legend class="border-bottom mb-4" align="center">{% trans "YOUR MESSAGES" %}</legend>
-
-<ul class="list-group list-group-horizontal">
-    <!--Заказы и предложения инфопанели-->
-    <li class="list-group-item list-group-item" style="width: 30rem; ">
-        <ul class="list-group">
-            <li class="list-group-item list-group-item-info">
-                {% trans "Dialogs" %}
-            </li>
-            <div class="overflow-auto" style="height: 35rem;">
-                {% for key, value in sort_suggestions.items %}
-                    {% if value in suggestions %}
-                        {% if value == suggestion %}
-                            <small class="col">
-                                <a href="{% url 'dashboard-message-view' url=value.id %}"
-                                   class="list-group-item list-group-item-info list-group-item-action">
-                                    {{value.order}}
-                                    <hr>
-                                    {{value}}
-                                </a>
-                            </small>
-                        {% else %}
-                            <small class="col">
-                                <a href="{% url 'dashboard-message-view' url=value.id %}"
-                                   class="list-group-item list-group-item-action">
-                                    {{value.order}}
-                                    <hr>
-                                    {{value}}
-                                </a>
-                            </small>
-                        {% endif %}
-                    {% endif %}
-                {% endfor %}
-            </div>
-        </ul>
-    </li>
-    <li class="list-group-item list-group-item" style="width: 60rem;">
-            <div class="card bg-light mb-3">
-                <div class="card-header">
-                    <small class="">
-                        {% trans "Want to go to the offer? Click " %}
-                        <a href="{% url 'suggestion_detail' url=suggestion.id %}">{% trans "here" %}</a>
-                        {% trans "or if you want to view the order click" %}
-                        <a href="{% url 'order_detail' url=suggestion.order.id %}">{% trans "here" %}</a>
-                    </small>
-                    <p class="mb-0">
-                        <small>{% trans "Suggestion: " %}</small>
-                        {{suggestion.offer_description}}
-                        <small>{% trans "Interlocutor: " %}</small>
-                        {% if suggestion.author == user %}
-                            {{ suggestion.order.author }}
-                        {% else %}
-                            dqq
-                        {% endif %}
-                    </p>
-                </div>
-
-                <ul class="list-group">
-                    <div class="overflow-auto" style="height: 28rem;">
-                        {% for mes in message1 %}
-                            {% if mes.member == user %}
-                                <li class="d-flex justify-content-between mb-2 mr-2">
-                                    <div class="mr-2 ml-lg-3 ml-0 z-depth-1">
-                                        <small class="pull-right text-muted"><i class="far fa-clock"></i>
-                                            {{ mes.pub_date }}
+<div class="block col mb-4" style=" background:#FFFFFF;">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8 mt-3" align="center" style=" background:#FFFFF0;">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "HOME" %}</a></li>
+                  <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "DASHBOARD" %} - "{{user.username}}"</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans "MESSAGES" %}</li>
+              </ol>
+            </nav>
+            <ul class="list-group list-group-horizontal">
+                <!--Заказы и предложения инфопанели-->
+                <li class="list-group-item list-group-item" style="width: 30rem; ">
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-info">
+                            {% trans "Dialogs" %}
+                        </li>
+                        <div class="overflow-auto" style="height: 35rem;">
+                            {% for key, value in sort_suggestions.items %}
+                                {% if value in suggestions %}
+                                    {% if value == suggestion %}
+                                        <small class="col">
+                                            <a href="{% url 'dashboard-message-view' url=value.id %}"
+                                               class="list-group-item list-group-item-info list-group-item-action">
+                                                {% trans "ORDER №" %}{{value.order.id}} - "{{value.order}}"
+                                                <hr>
+                                                {% trans "SUGGESTION №" %}{{value.id}} - "{{value.offer_description}}"
+                                            </a>
                                         </small>
-                                    </div>
-                                    <div class="chat-body">
-                                        <p class="mb-0">
-                                            <h5><span class="badge badge-success">{{mes.message}}</span></h5>
-                                        </p>
-                                    </div>
-                                </li>
-                            {% else %}
-                                <li class="d-flex justify-content-between mb-2 ml-2">
-                                    <div class="chat-body">
-                                        <p class="mb-0">
-                                            <h5><span class="badge badge-secondary">{{mes.message}}</span></h5>
-                                        </p>
-                                    </div>
-                                    <div class="mr-0 mr-3 z-depth-1">
-                                        <small class="pull-right text-muted"><i class="far fa-clock"></i>
-                                            {{ mes.pub_date }}
+                                    {% else %}
+                                        <small class="col">
+                                            <a href="{% url 'dashboard-message-view' url=value.id %}"
+                                               class="list-group-item list-group-item-action">
+                                                {% trans "ORDER №" %}{{value.order.id}} - "{{value.order}}"
+                                                <hr>
+                                                {% trans "SUGGESTION №" %}{{value.id}} - "{{value.offer_description}}"
+                                            </a>
                                         </small>
-                                    </div>
-                                </li>
-                            {% endif %}
-                        {% endfor %}
-                    </div>
-                    <form class="form-group" method="post">
-                        {% csrf_token %}
-                        <div class="white col">
-                            <div class="basic-textarea">
-                                <textarea class="form-control pl-2 my-0" id="exampleFormControlTextarea3" rows="3"
-                                          placeholder="Type your message here..." name="message"></textarea>
-                            </div>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
                         </div>
-                        <button type="submit"
-                                class="btn btn-outline-primary btn-sm float-right mr-2 mt-2 col-2">
-                            {% trans "Send" %}
-                        </button>
-                    </form>
-                </ul>
-            </div>
-        </li>
-</ul>
+                    </ul>
+                </li>
+                <li class="list-group-item list-group-item" style="width: 60rem;">
+                    <div class="card bg-light mb-3">
+                        <div class="card-header">
+                            <small class="">
+                                {% trans "Want to go to the offer? Click " %}
+                                <a href="{% url 'suggestion_detail' url=suggestion.id %}">{% trans "here" %}</a>
+                                {% trans "or if you want to view the order click" %}
+                                <a href="{% url 'order_and_suggestion_view' url=suggestion.order.id %}">{% trans "here" %}</a>
+                            </small>
+                            <p class="mb-0">
+                                <small>{% trans "Interlocutor: " %}</small>
+                                {% if suggestion.author == user %}
+                                    {{ suggestion.order.author }}
+                                {% else %}
+                                    {{ suggestion.author }}
+                                {% endif %}
+                            </p>
+                        </div>
 
+                        <ul class="list-group">
+                            <div class="overflow-auto" style="height: 28rem;">
+                                {% for mes in message1 %}
+                                    {% if mes.member == user %}
+                                        <li class="d-flex justify-content-between mb-2 mr-2">
+                                            <div class="mr-2 ml-lg-3 ml-0 z-depth-1">
+                                                <small class="pull-right text-muted"><i class="far fa-clock"></i>
+                                                    {{ mes.pub_date }}
+                                                </small>
+                                            </div>
+                                            <div class="chat-body">
+                                                <p class="mb-0">
+                                                    <h5><span class="badge badge-success" style="white-space: normal;">{{mes.message}}</span></h5>
+                                                </p>
+                                            </div>
+                                        </li>
+                                    {% else %}
+                                        <li class="d-flex justify-content-between mb-2 ml-2">
+                                            <div class="chat-body">
+                                                <p class="mb-0">
+                                                    <h5><span class="badge badge-secondary"style="white-space: normal;">{{mes.message}}</span></h5>
+                                                </p>
+                                            </div>
+                                            <div class="mr-0 mr-3 z-depth-1">
+                                                <small class="pull-right text-muted"><i class="far fa-clock"></i>
+                                                    {{ mes.pub_date }}
+                                                </small>
+                                            </div>
+                                        </li>
+                                    {% endif %}
+                                {% endfor %}
+                            </div>
+                            <form class="form-group" method="post">
+                                {% csrf_token %}
+                                <div class="white col">
+                                    <div class="basic-textarea">
+                                        <textarea class="form-control pl-2 my-0" id="exampleFormControlTextarea3" rows="3"
+                                                  placeholder="Type your message here..." name="message"></textarea>
+                                    </div>
+                                </div>
+                                <button type="submit"
+                                        class="btn btn-outline-primary btn-sm float-right mr-2 mt-2 col-2">
+                                    {% trans "Send" %}
+                                </button>
+                            </form>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -25,7 +25,7 @@ SECRET_KEY = 's4p$!l$5a!bquvfl4+&az0)m-421w3cad)dyfbbo9-$l&-c2=@'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['18.196.79.50']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -38,6 +38,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
     'crispy_forms',
     'HomePage',
     'users.apps.UsersConfig',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'dashboard',
     'suggestions',
     'chat.apps.ChatConfig',
+
 
     #allauth
     'allauth',
@@ -97,12 +99,8 @@ WSGI_APPLICATION = 'OR.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'orp',
-        'USER': 'texnodgo',
-        'PASSWORD': 'spirit988',
-        'HOST': 'localhost',
-        'PORT': '',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -197,3 +195,9 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = 'nikita.crispy.machine@gmail.com'
 EMAIL_HOST_PASSWORD = 'nikola1901tesla'
+
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
+    ),
+}

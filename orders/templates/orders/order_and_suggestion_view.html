@@ -1,115 +1,69 @@
 {% extends "HomePage/base.html" %}
 {% load i18n %}
-{% block title %}{% trans "Crispy Order" %} № {{ order.id }}{% endblock %}
+{% block title %}{% trans "CO|ORDER №" %}{{ order.id }}-{{order.title}}{% endblock %}
 {% load static %}
 
 {% block content %}
     <link rel="stylesheet" href="{% static 'orders/order_style.css' %}">
-    <!--Навигация-->
-    <nav aria-label="breadcrumb">
-      <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
-        <li class="breadcrumb-item"><a href="{% url 'orders' %}">{% trans "All orders" %}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{% trans "Order: " %} "{{ order.title }}"</li>
-      </ol>
-    </nav>
-    <!--Навигация-->
+    
+    
+    <div class="block col mb-4" style=" background:#FFFFFF;">
+        <div class="row">
+            <div class="col-sm-2"></div>
+            <div class="col-sm-8 mt-3" align="center" style=" background:#FFFFF0;">
+                <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "HOME" %}</a></li>
+                    <li class="breadcrumb-item"><a href="{% url 'all_cod_order_view' %}">{% trans "ALL ORDERS" %}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{% trans "Order № " %}{{ order.id }}: "{{ order.title }}"</li>
+                </ol>
+                </nav>
+                <div class="row">
+                    <!--Для одиночного заказа-->
+                    {% if order.group_status == False %}
 
-    {% if order.group_status == True %}
-    <div class="page1">
-        <!--Заказ-->
-        <div class="order">
-            <div class="card ml-2 mr-2" style="height: 45rem;">
-                <div class="card-header mb-3" align="center">
-                    {% trans "Order #" %}{{order.pk}}
-                </div>
-                <div class="card-body" >
-                    <h5 class="card-title">
-                        {{ order.title }}
-                        <small>
-                            {% if order.status == 'Discussion' %}
-                                <span class="badge badge-pill badge-warning">{{ order.status }}</span>
-                            {% elif order.status == 'InWork' %}
-                                <span class="badge badge-pill badge-success">{{ order.status }}</span>
-                            {% elif order.status == 'Done' %}
-                                <span class="badge badge-pill badge-secondary">{{ order.status }}</span>
-                            {% elif order.status == 'Canceled' %}
-                                <span class="badge badge-pill badge-danger">{{ order.status }}</span>
-                            {% endif %}
-                        </small>
-                    </h5>
-                    <p class="card-text">{{ order.description }}</p>
-                </div>
-                <a href="{{ order.pdf_cover.url }}">
-                    <img src="{{order.image_cover.url}}" class="card-img-top" alt="...">
-                </a>
-                <div class="card-body">
-                    <p class="card-text">
-                        <small class="text-muted col-5">
-                            {% trans "Order created: " %}{{ order.date_create }}
-                        </small>
-                        <small class="text-muted col-5 ml-5">
-                            {% trans "Order author: " %} {{ order.author }}
-                        </small>
-                    </p>
-                    <p class="card-text">
-                        <small class="text-muted ml-5 col-5 mr-5">
-                            {% trans "Order City: " %} {{ order.city }}
-                        </small>
-                        <small class="text-muted ml-5">
-                            {% trans "Order Budget: " %} {{ order.proposed_budget }}
-                        </small>
-                     </p>
-                </div>
-                <div class="card-footer bg-transparent border-success" align="center">
-                    <div class="list-group list-group-horizontal">
-                        <a href="{% url 'cod_order_delete' pk=order.pk %}"
-                           class="list-group-item list-group-item-action list-group-item-danger">
-                            {% trans "Delete" %}
-                        </a>
-                        <a href="{% url 'order_update' pk=order.pk %}"
-                           class="list-group-item list-group-item-action list-group-item-warning">
-                            {% trans "Update" %}
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action list-group-item-success disabled"
-                           tabindex="-1" aria-disabled="true">
-                            {% trans "Send friend" %}
-                        </a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--Заказ-->
-        <!--Деталь(ли)-->
-        <div class="detail">
-            <div class="card ml-2 mr-2 mb-4">
-                <div class="card-header" align="center">
-                    {% trans "Order Details Description" %}
-                </div>
-                <ul class="nav nav-pills nav-fill " id="pills-tab" role="tablist">
-                        <li class="nav-item">
-                            <a class="nav-link active" id="pills-Collage-tab"
-                               data-toggle="pill" href="#pills-Collage"
-                               role="tab" aria-controls="pills-Collage"
-                               aria-selected="true">{% trans "Collage" %}
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" id="pills-Table-tab"
-                               data-toggle="pill" href="#pills-Table"
-                               role="tab" aria-controls="pills-Table"
-                               aria-selected="false">{% trans "Table" %}
-                            </a>
-                        </li>
-                    </ul>
-                <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pills-Collage" role="tabpanel" aria-labelledby="pills-Collage-tab">
-                        <div class="overflow-auto" style="height: 40rem;">
-                            <div class="row row-cols-1 row-cols-2 col">
-                                {% for detail in details %}
-                                    <div class="card mb-2">
-                                        <img src="{{detail.image_cover.url}}" class="card-img-top" alt="...">
-                                        <ul class="list-group list-group-flush">
+                    <!--Описание заказа и детали-->
+                    <div class="col-sm-6">
+                            <div class="card ml-2 mr-2">
+                                <div class="card-header mb-3" align="center">
+                                    <h5 class="card-title">
+                                        {{ order.title }}
+                                        <small>
+                                            {% if order.status == 'Discussion' %}
+                                                <span class="badge badge-pill badge-warning">{{ order.status }}</span>
+                                            {% elif order.status == 'InWork' %}
+                                                <span class="badge badge-pill badge-success">{{ order.status }}</span>
+                                            {% elif order.status == 'Done' %}
+                                                <span class="badge badge-pill badge-secondary">{{ order.status }}</span>
+                                            {% elif order.status == 'Canceled' %}
+                                                <span class="badge badge-pill badge-danger">{{ order.status }}</span>
+                                            {% endif %}
+                                        </small>
+                                    </h5>
+                                </div>
+                                <a href="{{ order.pdf_cover.url }}">
+                                    <img src="{{order.image_cover.url}}" class="card-img-top" alt="...">
+                                </a>
+                                
+                                <div class="card-body">
+                                    <ul class="list-group list-group-flush">
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {% trans "Order created: " %}
+                                        <span class="badge badge-primary mr-2">{{ order.date_create }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            {% trans "Order author: " %}
+                                            <span class="badge badge-primary mr-2">{{ order.author }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            {% trans "Order City: " %}
+                                            <span class="badge badge-primary mr-2">{{ order.city }}</span>
+                                        </li>
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            {% trans "Order Budget: " %}
+                                            <span class="badge badge-primary mr-2">{{ order.proposed_budget }}</span>
+                                        </li>
+                                        {% for detail in details %}
                                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                                 {% trans "Detail name: " %}
                                                 <span class="badge badge-primary mr-2">{{ detail.name }}</span>
@@ -121,6 +75,7 @@
                                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                                 {% trans "Material: " %}
                                                 <span class="badge badge-primary mr-2">{{ detail.material }}</span>
+
                                             </li>
                                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                                 {% trans "Whose material: " %}
@@ -132,7 +87,9 @@
                                             </li>
                                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                                 {% trans "Categories: " %}
-                                                <span class="badge badge-primary mr-2">{{ detail.Categories }}</span>
+                                                {% for cat in detail.Categories.all %}
+                                                    <span class="badge badge-primary mr-2" >{{ cat }}</span>
+                                                {% endfor %}
                                             </li>
                                             <li class="list-group-item d-flex justify-content-between align-items-center">
                                                 {% trans "Deadline: " %}
@@ -142,334 +99,313 @@
                                                 {% trans "Availability date: " %}
                                                 <span class="badge badge-primary mr-2">{{ detail.Availability_date }}</span>
                                             </li>
-                                            <li class="list-group-item">
-                                                {% trans "Detail files:" %}
-                                            </li>
-                                            {% if detail.pdf %}
                                             <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                <div class="mr-2">{% trans "PDF:" %}</div>
-                                                <a href="{{ detail.pdf.url }}" class="btn btn-success col btn-sm" download>download</a>
-                                                <a href="{{ detail.pdf.url }}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
+                                                {{ order.description }}
                                             </li>
-                                            {% endif %}
-                                            {% if detail.dxf %}
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                <div class="mr-2">{% trans "DXF:" %}</div>
-                                                <a href="{{ detail.dxf.url }}" class="btn btn-success col btn-sm" download>download</a>
-                                                <a href="//beta.sharecad.org/cadframe/load?url=https://18.196.79.50{{ detail.dxf.url }}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
-                                                <!-- Button trigger modal -->
-                                                <!--
-                                                <button type="button" class="btn btn-info col btn-sm ml-2" data-toggle="modal" data-target="#exampleModalCenter3">
-                                                  view
-                                                </button>
-                                                -->
 
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
-                                                  <div class="modal-dialog modal-dialog-centered" role="document">
-                                                    <div class="modal-content" style="width:55rem; right:10rem;" align="center">
-                                                      <div class="modal-header" >
-                                                        <h5 class="modal-title" id="exampleModalCenterTitle3" >DXF Veiwer</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                          <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                      </div>
-                                                      <div class="modal-body">
-                                                          <!-- Заменить ссылку в iframe -->
-                                                        <iframe src="//sharecad.org/cadframe/load?url=https://18.196.79.50{{ detail.dxf.url }}" scrolling="no" style="height:40rem; width:50rem;"></iframe>
-                                                      </div>
-                                                      <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary col" data-dismiss="modal">Close</button>
-                                                      </div>
-                                                    </div>
+                                        {% endfor %}
+                                        <li class="list-group-item">
+                                            {% trans "Detail files:" %}
+                                        </li>
+
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div class="mr-2">{% trans "PDF:" %}</div>
+                                            <a href="{{order.pdf_cover.url}}" class="btn btn-success col btn-sm" download>download</a>
+                                            <a href="{{order.pdf_cover.url}}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
+                                        </li>
+                                        {% if single_detail.dxf %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div class="mr-2">{% trans "DXF:" %}</div>
+                                            <a href="{{ single_detail.dxf.url }}" class="btn btn-success col btn-sm" download>download</a>
+                                            <!-- Button trigger modal -->
+                                            <a href="//beta.sharecad.org/cadframe/load?url=https://18.196.79.50{{ single_detail.dxf.url }}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
+                                            <!--
+                                            <button type="button" class="btn btn-info col btn-sm ml-2" data-toggle="modal" data-target="#exampleModalCenter">
+                                              view
+                                            </button>
+                                            -->
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
+                                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content" style="width:55rem; right:10rem;" align="center">
+                                                  <div class="modal-header" >
+                                                    <h5 class="modal-title" id="exampleModalCenterTitle" >DXF Veiwer</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                  </div>
+                                                  <div class="modal-body">
+                                                      <!-- Заменить ссылку в iframe -->
+                                                    <iframe src="//sharecad.org/cadframe/load?url=https://18.196.79.50{{ single_detail.dxf.url }}" scrolling="no" style="height:40rem; width:50rem;"></iframe>
+                                                  </div>
+                                                  <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary col" data-dismiss="modal">Close</button>
                                                   </div>
                                                 </div>
-                                            </li>
-                                            {% endif %}
-                                            {% if detail.step %}
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                <div class="mr-2">{% trans "STEP:" %}</div>
-                                                <a href="{{ detail.step.url }}" class="btn btn-success col btn-sm" download>download</a>
-                                                <a href="//beta.sharecad.org/cadframe/load?url=https://18.196.79.50{{ detail.step.url }}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
-                                                <!-- Button trigger modal -->
-                                                <!--
-                                                <button type="button" class="btn btn-info col btn-sm ml-2" data-toggle="modal" data-target="#exampleModalCenter4">
-                                                  view
-                                                </button>
-                                                -->
-
-                                                <!-- Modal -->
-                                                <div class="modal fade" id="exampleModalCenter4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
-                                                  <div class="modal-dialog modal-dialog-centered" role="document">
-                                                    <div class="modal-content" style="width:55rem; right:10rem;" align="center">
-                                                      <div class="modal-header" >
-                                                        <h5 class="modal-title" id="exampleModalCenterTitle4" >DXF Veiwer</h5>
-                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                          <span aria-hidden="true">&times;</span>
-                                                        </button>
-                                                      </div>
-                                                      <div class="modal-body">
-                                                          <!-- Заменить ссылку в iframe -->
-                                                        <iframe src="//sharecad.org/cadframe/load?url=https://18.196.79.50{{ detail.step.url }}" scrolling="no" style="height:40rem; width:50rem;"></iframe>
-                                                      </div>
-                                                      <div class="modal-footer">
-                                                        <button type="button" class="btn btn-secondary col" data-dismiss="modal">Close</button>
-                                                      </div>
-                                                    </div>
-                                                  </div>
-                                                </div>
-                                            </li>
-                                            {% endif %}
-                                            {% if detail.part %}
-                                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                                <div class="mr-2">{% trans "PART:" %}</div>
-                                                <a href="{{ detail.part.url }}" class="btn btn-success col btn-sm" download>download</a>
-                                            </li>
-                                            {% endif %}
-                                        </ul>
-                                    </div>
-                                {% endfor %}
-                            </div>
-                        </div>
-                    </div>
-                    <div class="tab-pane fade" id="pills-Table" role="tabpanel" aria-labelledby="pills-Table-tab">
-                        <div class="card mb-4">
-                            <table class="col">
-                                <tbody >
-                                    <tr>
-                                        <td>{% trans "Name" %}</td>
-                                        <td>{% trans "amount" %}</td>
-                                        <td>{% trans "material" %}</td>
-                                        <td>{% trans "whose_material" %}</td>
-                                        <td>{% trans "Note" %}</td>
-                                        <td>{% trans "Categories" %}</td>
-                                        <td>{% trans "Deadline" %}</td>
-                                        <td>{% trans "Availability_date" %}</td>
-                                    </tr>
-                                    {% for detail in details %}
-                                    <tr>
-                                        <td>{% trans "Name" %}</td>
-                                        <td>{{ detail.amount }}</td>
-                                        <td>{{ detail.material }}</td>
-                                        <td>{{ detail.whose_material }}</td>
-                                        <td>{{ detail.Note }}</td>
-                                        <td>{% trans "Categories" %}</td>
-                                        <td>{{ detail.Deadline }}</td>
-                                        <td>{{ detail.Availability_date }}</td>
-                                    </tr>
-                                    {% endfor %}
-                                </tbody>
-                            </table>
-                        </div>
-                        <div class="mt-4" align="center">
-                            <a href="{% url 'create_xls_project' url=order.pk %}"
-                               class="list-group-item list-group-item-action list-group-item-primary">
-                                {% trans "CREATE 'XLS' PROJECT" %}
-                            </a>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!--Деталь(ли)-->
-        <!--Предложения для автора-->
-        <div class="suggestions">
-            <div class="card ml-2 mr-2">
-                <div class="card-header mb-3" align="center">
-                    {% trans "Suggestions" %}
-                </div>
-                {% if request.user == order.author %}
-                    <div class="overflow-auto" style="height: 41rem;">
-                        {% if suggestions %}
-                        {% for suggestion in suggestions %}
-                        <div class="card-body">
-                            <div class="card mb-3" style="max-width: 44rem;">
-                                {% if suggestion.status == 'Discussion' %}
-                                <div class="card-header text-white bg-dark" align="center">
-                                {% elif suggestion.status == 'InWork' %}
-                                <div class="card-header text-white bg-success" align="center">
-                                {% elif suggestion.status == 'Done' %}
-                                <div class="card-header text-white bg-primary" align="center">
-                                {% elif suggestion.status == 'Canceled' %}
-                                <div class="card-header text-white bg-secondary" align="center">
-                                {% endif %}
-                                    <small class="col-5"></small>{{suggestion.author}}
-                                    <small class="col-5"></small>{{suggestion.date_create}}
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title col" align="center">{{suggestion.offer_price}}</h5>
-                                    <p class="card-text col" align="center">{{suggestion.offer_description}}</p>
-                                </div>
-                                <div class="card-footer bg-transparent border-dark" align="center">
-                                    <div class="list-group list-group-horizontal">
-                                        <a href="{% url 'suggestion_detail' url=suggestion.pk %}"
-                                           class="list-group-item list-group-item-action list-group-item-info">
-                                            {% trans "Detail" %}
-                                        </a>
-                                        {% if order.status == 'Discussion' %}
-                                        <a href="{% url 'change_status' url=suggestion.pk %}"
-                                           class="list-group-item list-group-item-action list-group-item-success"
-                                           tabindex="-1" aria-disabled="true">
-                                            {% trans "Select" %}
-                                        </a>
-                                        {% else %}
-                                        <a href="{% url 'change_status' url=suggestion.pk %}" class="list-group-item list-group-item-action list-group-item-success disabled"
-                                           tabindex="-1" aria-disabled="true">
-                                            {% trans "Select" %}
-                                        </a>
+                                              </div>
+                                            </div>
+                                        </li>
                                         {% endif %}
+                                        {% if single_detail.step %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div class="mr-2">{% trans "STEP:" %}</div>
+                                            <a href="{{ single_detail.step.url }}" class="btn btn-success col btn-sm" download>download</a>
+                                            <!-- Button trigger modal -->
+                                            <a href="//beta.sharecad.org/cadframe/load?url=https://18.196.79.50{{ single_detail.step.url }}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
+                                            <!--<button type="button" class="btn btn-info col btn-sm ml-2" data-toggle="modal" data-target="#exampleModalCenter2">
+                                              view
+                                            </button>
+                                            -->
+
+                                            <!-- Modal -->
+                                            <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
+                                              <div class="modal-dialog modal-dialog-centered" role="document">
+                                                <div class="modal-content" style="width:55rem; right:10rem;" align="center">
+                                                  <div class="modal-header" >
+                                                    <h5 class="modal-title" id="exampleModalCenterTitle2" >STEP Veiwer</h5>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                      <span aria-hidden="true">&times;</span>
+                                                    </button>
+                                                  </div>
+                                                  <div class="modal-body">
+                                                      <!-- Заменить ссылку в iframe -->
+                                                    <iframe src="//beta.sharecad.org/cadframe/load?url=https://18.196.79.50{{ single_detail.step.url }}" scrolling="no" style="height:40rem; width:50rem;"></iframe>
+                                                  </div>
+                                                  <div class="modal-footer">
+                                                    <button type="button" class="btn btn-secondary col" data-dismiss="modal">Close</button>
+                                                  </div>
+                                                </div>
+                                              </div>
+                                            </div>
+                                        </li>
+                                        {% endif %}
+                                        {% if single_detail.part %}
+                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                            <div class="mr-2">{% trans "PART:" %}</div>
+                                            <a href="{{ single_detail.part.url }}" class="btn btn-success col btn-sm" download>download</a>
+                                        </li>
+                                        {% endif %}
+                                    </ul>
+
+                                </div>
+                                <div class="card-footer bg-transparent border-success" align="center">
+                                    <div class="list-group list-group-horizontal">
+                                        <a href="{% url 'cod_order_delete' pk=order.pk %}"
+                                           class="list-group-item list-group-item-action list-group-item-danger">
+                                            {% trans "Delete" %}
+                                        </a>
+                                        <a href="{% url 'order_update' pk=order.pk %}"
+                                           class="list-group-item list-group-item-action list-group-item-warning">
+                                            {% trans "Update" %}
+                                        </a>
+                                        <a href="#" class="list-group-item list-group-item-action list-group-item-success disabled"
+                                           tabindex="-1" aria-disabled="true">
+                                            {% trans "Send friend" %}
+                                        </a>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        {% endfor %}
-                        {% else %}
-                            <div class="col">
-                                <small>
-                                    {% trans "There are no offers yet for this order. If the situation does" %}
-                                    {% trans "not change over a long period of time, then complete the" %}
-                                    {% trans "order with information or files by clicking 'UPDATE' order." %}
-                                </small>
+                    </div>
+                    <!--Описание заказа и детали-->
+
+                    <!--Предложения-->
+                    <div class="col-sm-6">
+                        <div class="card ml-2 mr-2">
+                            <div class="card-header mb-3" align="center">
+                                {% trans "Suggestions" %}
                             </div>
-                        {% endif %}
-                    </div>
-                {% elif request.user != order.author %}
-                    <div class="card-body">
-                    <div class="card bg-light ml-3 mb-3" style="max-width: 44rem;">
-                      <div class="card-body">
-                        <a href="{% url 'create_suggestion' url=order.pk %}">
-                            <h3 class="card-title" align="center">Create suggestion</h3>
-                        </a>
-                      </div>
-                    </div>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-        <!--Предложения для автора-->
-    </div>
-    {% elif order.group_status == False %}
-    <div class="page2">
-        <!--Заказ-->
-        <div class="order2">
-            <div class="card ml-2" style="max-width: 100rem;">
-                <div class="card-header" align="center">
-                    {% trans "Order" %}
-                </div>
-                <div class="card-body">
-                    <div class="row no-gutters">
-                    <div class="col-md-4">
-                        <a href="{{ order.pdf_cover.url }}">
-                            <img src="{{order.image_cover.url}}" class="card-img-top" alt="...">
-                        </a>
-                        <div class="card mb-2">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item">
-                                    {% trans "Detail files:" %}
-                                </li>
-
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div class="mr-2">{% trans "PDF:" %}</div>
-                                    <a href="{{order.pdf_cover.url}}" class="btn btn-success col btn-sm" download>download</a>
-                                    <a href="{{order.pdf_cover.url}}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
-                                </li>
-                                {% if single_detail.dxf %}
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div class="mr-2">{% trans "DXF:" %}</div>
-                                    <a href="{{ single_detail.dxf.url }}" class="btn btn-success col btn-sm" download>download</a>
-                                    <!-- Button trigger modal -->
-                                    <a href="//beta.sharecad.org/cadframe/load?url=https://18.196.79.50{{ single_detail.dxf.url }}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
-                                    <!--
-                                    <button type="button" class="btn btn-info col btn-sm ml-2" data-toggle="modal" data-target="#exampleModalCenter">
-                                      view
-                                    </button>
-                                    -->
-
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
-                                      <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content" style="width:55rem; right:10rem;" align="center">
-                                          <div class="modal-header" >
-                                            <h5 class="modal-title" id="exampleModalCenterTitle" >DXF Veiwer</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                              <span aria-hidden="true">&times;</span>
-                                            </button>
-                                          </div>
-                                          <div class="modal-body">
-                                              <!-- Заменить ссылку в iframe -->
-                                            <iframe src="//sharecad.org/cadframe/load?url=https://18.196.79.50{{ single_detail.dxf.url }}" scrolling="no" style="height:40rem; width:50rem;"></iframe>
-                                          </div>
-                                          <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary col" data-dismiss="modal">Close</button>
-                                          </div>
+                            {% if request.user == order.author %}
+                                <div class="overflow-auto" style="height: 41rem;">
+                                    {% if suggestions %}
+                                        {% for suggestion in suggestions %}
+                                                <ul class="list-group ml-1 mr-1">
+                                                    <div class="mb-3" style="max-width: 44rem;">
+                                                        {% if suggestion.status == 'Discussion' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% elif suggestion.status == 'InWork' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% elif suggestion.status == 'Done' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-dark">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% elif suggestion.status == 'Canceled' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-warning">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% endif %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER PRICE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.offer_price}}</span>
+                                                        </li>
+                                                        <li class="list-group-item align-items-center">
+                                                            {{suggestion.offer_description}}
+                                                        </li>
+                                                        <li class="list-group-item align-items-center">
+                                                            <div class="list-group list-group-horizontal">
+                                                                <a href="{% url 'suggestion_detail' url=suggestion.pk %}"
+                                                                   class="list-group-item list-group-item-action list-group-item-info">
+                                                                    {% trans "Detail" %}
+                                                                </a>
+                                                                {% if order.status == 'Discussion' %}
+                                                                <a href="{% url 'change_status' url=suggestion.pk %}"
+                                                                   class="list-group-item list-group-item-action list-group-item-success"
+                                                                   tabindex="-1" aria-disabled="true">
+                                                                    {% trans "Select" %}
+                                                                </a>
+                                                                {% else %}
+                                                                <a href="{% url 'change_status' url=suggestion.pk %}" class="list-group-item list-group-item-action list-group-item-success disabled"
+                                                                   tabindex="-1" aria-disabled="true">
+                                                                    {% trans "Select" %}
+                                                                </a>
+                                                                {% endif %}
+                                                            </div>
+                                                        </li>
+                                                    </div>
+                                                </ul>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="col">
+                                            <small>
+                                                {% trans "There are no offers yet for this order. If the situation does" %}
+                                                {% trans "not change over a long period of time, then complete the" %}
+                                                {% trans "order with information or files by clicking 'UPDATE' order." %}
+                                            </small>
                                         </div>
-                                      </div>
-                                    </div>
-                                </li>
-                                {% endif %}
-                                {% if single_detail.step %}
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div class="mr-2">{% trans "STEP:" %}</div>
-                                    <a href="{{ single_detail.step.url }}" class="btn btn-success col btn-sm" download>download</a>
-                                    <!-- Button trigger modal -->
-                                    <a href="//beta.sharecad.org/cadframe/load?url=https://18.196.79.50{{ single_detail.step.url }}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
-                                    <!--<button type="button" class="btn btn-info col btn-sm ml-2" data-toggle="modal" data-target="#exampleModalCenter2">
-                                      view
-                                    </button>
-                                    -->
+                                    {% endif %}
+                                </div>
+                            {% elif request.user != order.author %}
 
-                                    <!-- Modal -->
-                                    <div class="modal fade" id="exampleModalCenter2" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
-                                      <div class="modal-dialog modal-dialog-centered" role="document">
-                                        <div class="modal-content" style="width:55rem; right:10rem;" align="center">
-                                          <div class="modal-header" >
-                                            <h5 class="modal-title" id="exampleModalCenterTitle2" >STEP Veiwer</h5>
-                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                              <span aria-hidden="true">&times;</span>
-                                            </button>
-                                          </div>
-                                          <div class="modal-body">
-                                              <!-- Заменить ссылку в iframe -->
-                                            <iframe src="//beta.sharecad.org/cadframe/load?url=https://18.196.79.50{{ single_detail.step.url }}" scrolling="no" style="height:40rem; width:50rem;"></iframe>
-                                          </div>
-                                          <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary col" data-dismiss="modal">Close</button>
-                                          </div>
-                                        </div>
-                                      </div>
-                                    </div>
-                                </li>
-                                {% endif %}
-                                {% if single_detail.part %}
-                                <li class="list-group-item d-flex justify-content-between align-items-center">
-                                    <div class="mr-2">{% trans "PART:" %}</div>
-                                    <a href="{{ single_detail.part.url }}" class="btn btn-success col btn-sm" download>download</a>
-                                </li>
-                                {% endif %}
-                            </ul>
+                            {% if suggestions %}
+                                {% for suggestion in suggestions %}
+                                    {% if request.user == suggestion.author %}
+                                    <ul class="list-group ml-1 mr-1">
+                                                    <div class="mb-3" style="max-width: 44rem;">
+                                                        {% if suggestion.status == 'Discussion' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% elif suggestion.status == 'InWork' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% elif suggestion.status == 'Done' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-dark">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% elif suggestion.status == 'Canceled' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-warning">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% endif %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER PRICE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.offer_price}}</span>
+                                                        </li>
+                                                        <li class="list-group-item align-items-center">
+                                                            {{suggestion.offer_description}}
+                                                        </li>
+                                                        <li class="list-group-item align-items-center">
+                                                            <div class="list-group list-group-horizontal">
+                                                                <a href="{% url 'suggestion_detail' url=suggestion.pk %}"
+                                                                   class="list-group-item list-group-item-action list-group-item-info">
+                                                                    {% trans "Detail" %}
+                                                                </a>
+                                                            </div>
+                                                        </li>
+                                                    </div>
+                                                </ul>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            <div class="card-body">
+                                <a class="btn btn-primary btn-lg btn-block" href="{% url 'create_suggestion' url=order.pk %}" align="center">
+                                    {% trans "CREATE SUGGESTION" %}+
+                                </a>
+                            </div>
+                            {% endif %}
                         </div>
                     </div>
-                    <div class="col-md-8" >
-                        <div class="card-body" style="height: 50rem;">
-                            <h5 class="card-title">
-                                {{ order.title }}
-                                <small>
-                                    {% if order.status == 'Discussion' %}
-                                        <span class="badge badge-pill badge-warning">{{ order.status }}</span>
-                                    {% elif order.status == 'InWork' %}
-                                        <span class="badge badge-pill badge-success">{{ order.status }}</span>
-                                    {% elif order.status == 'Done' %}
-                                        <span class="badge badge-pill badge-secondary">{{ order.status }}</span>
-                                    {% elif order.status == 'Canceled' %}
-                                        <span class="badge badge-pill badge-danger">{{ order.status }}</span>
-                                    {% endif %}
-                                </small>
-                            </h5>
-                            <div class="card mb-2">
-                                <ul class="list-group list-group-flush">
-                                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                                        {% trans "Order created: " %}
-                                        <span class="badge badge-primary mr-2">{{ order.date_create }}</span>
+                    <!--Предложения-->
+
+                    {% endif %}
+
+                    <!--Для одиночного заказа-->
+
+                    <!--Для группового заказа-->
+                    {% if order.group_status == True %}
+
+                    <!--Описание заказа и деталей-->
+                    <div class="col-sm-7">
+                        <div class="card ml-2 mr-2">
+                            <div class="card-header mb-3" align="center">
+                                <h5 class="card-title">
+                                    {{ order.title }}
+                                    <small>
+                                        {% if order.status == 'Discussion' %}
+                                            <span class="badge badge-pill badge-warning">{{ order.status }}</span>
+                                        {% elif order.status == 'InWork' %}
+                                            <span class="badge badge-pill badge-success">{{ order.status }}</span>
+                                        {% elif order.status == 'Done' %}
+                                            <span class="badge badge-pill badge-secondary">{{ order.status }}</span>
+                                        {% elif order.status == 'Canceled' %}
+                                            <span class="badge badge-pill badge-danger">{{ order.status }}</span>
+                                        {% endif %}
+                                    </small>
+                                </h5>
+                            </div>
+                            <a href="{{ order.pdf_cover.url }}">
+                                <img src="{{order.image_cover.url}}" class="card-img-top" alt="...">
+                            </a>
+                            <div class="card-body">
+                                 <ul class="list-group list-group-flush">
+                                     <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    {% trans "Order created: " %}
+                                    <span class="badge badge-primary mr-2">{{ order.date_create }}</span>
                                     </li>
                                     <li class="list-group-item d-flex justify-content-between align-items-center">
                                         {% trans "Order author: " %}
@@ -483,150 +419,454 @@
                                         {% trans "Order Budget: " %}
                                         <span class="badge badge-primary mr-2">{{ order.proposed_budget }}</span>
                                     </li>
-                                    {% for detail in details %}
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {% trans "Detail name: " %}
-                                            <span class="badge badge-primary mr-2">{{ detail.name }}</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {% trans "Amount: " %}
-                                            <span class="badge badge-primary mr-2">{{ detail.amount }}</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {% trans "Material: " %}
-                                            <span class="badge badge-primary mr-2">{{ detail.material }}</span>
-
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {% trans "Whose material: " %}
-                                            <span class="badge badge-primary mr-2">{{ detail.whose_material }}</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {% trans "Note: " %}
-                                            <span class="badge badge-primary mr-2">{{ detail.Note }}</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {% trans "Categories: " %}
-                                            {% for cat in detail.Categories.all %}
-                                                <span class="badge badge-primary mr-2" >{{ cat }}</span>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        <div class="col" align="center">
+                                            {{ order.description }}
+                                        </div>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center col">
+                                        {% trans "Order Categoties: " %}
+                                        <div class="col">
+                                            {% for cat in order.Categories.all %}
+                                                <span class="badge badge-primary mr-2">{{ cat }}</span>
                                             {% endfor %}
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {% trans "Deadline: " %}
-                                            <span class="badge badge-primary mr-2">{{ detail.Deadline }}</span>
-                                        </li>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            {% trans "Availability date: " %}
-                                            <span class="badge badge-primary mr-2">{{ detail.Availability_date }}</span>
-                                        </li>
-                                    {% endfor %}
-                                </ul>
+                                        </div>
+                                    </li>
+                                 </ul>
                             </div>
-                            <p class="card-text">
-                                {% trans "Description: " %}
-                                {{ order.description }}
-                            </p>
+                            <div class="card-footer bg-transparent border-success" align="center">
+                                <div class="list-group list-group-horizontal">
+                                    <a href="{% url 'cod_order_delete' pk=order.pk %}"
+                                       class="list-group-item list-group-item-action list-group-item-danger">
+                                        {% trans "Delete" %}
+                                    </a>
+                                    <a href="{% url 'order_update' pk=order.pk %}"
+                                       class="list-group-item list-group-item-action list-group-item-warning">
+                                        {% trans "Update" %}
+                                    </a>
+                                    <a href="#" class="list-group-item list-group-item-action list-group-item-success disabled"
+                                       tabindex="-1" aria-disabled="true">
+                                        {% trans "Send friend" %}
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="card-header mb-3" align="center">
+                                <h5 class="card-title">
+                                    {% trans "Details" %}
+                                </h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="overflow-auto" style="height: 30rem;">
+                                    <div class="row row-cols-1 row-cols-2 col">
+                                        {% for detail in details %}
+                                            <ul class="list-group list-group-flush">
+                                                <a href="#" class="list-group-item list-group-item-action list-group-item-info mt-2" style="width: 98%;" data-toggle="modal" data-target="#exampleModalCenter{{detail.id}}">
+                                                  <img src="{{detail.image_cover.url}}" class="card-img-top" alt="...">
+                                                  <div class="card-body">
+                                                    <p class="card-text">{{ detail.name }}</p>
+                                                  </div>
+                                                </a>
+
+                                                <div class="modal" id="exampleModalCenter{{detail.id}}" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
+                                                  <div class="modal-dialog modal-xl modal-dialog-centered" role="document">
+                                                    <div class="modal-content">
+                                                      <div class="modal-header" align="center">
+                                                        <h5 class="modal-title" id="exampleModalCenterTitle" >
+                                                            {% trans "Detail: " %}{{detail.name }}
+                                                        </h5>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                          <span aria-hidden="true">&times;</span>
+                                                        </button>
+                                                      </div>
+                                                      <div class="modal-body">
+                                                        
+                                                        <div class="row">
+                                                            <div class="col-sm-5">
+                                                                <img src="{{detail.image_cover.url}}" class="card-img-top" alt="...">
+                                                            </div>
+                                                            <div class="col-sm-7">
+                                                                <ul class="list-group list-group-flush">
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        {% trans "Amount: " %}
+                                                                        <span class="badge badge-primary mr-2">{{ detail.amount }}</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        {% trans "Material: " %}
+                                                                        <span class="badge badge-primary mr-2">{{ detail.material }}</span>
+
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        {% trans "Whose material: " %}
+                                                                        <span class="badge badge-primary mr-2">{{ detail.whose_material }}</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        {% trans "Note: " %}
+                                                                        <span class="badge badge-primary mr-2">{{ detail.Note }}</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        {% trans "Categories: " %}
+                                                                        {% for cat in detail.Categories.all %}
+                                                                            <span class="badge badge-primary mr-2" >{{ cat }}</span>
+                                                                        {% endfor %}
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        {% trans "Deadline: " %}
+                                                                        <span class="badge badge-primary mr-2">{{ detail.Deadline }}</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        {% trans "Availability date: " %}
+                                                                        <span class="badge badge-primary mr-2">{{ detail.Availability_date }}</span>
+                                                                    </li>
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        {{ order.description }}
+                                                                    </li>
+
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        <div class="mr-2">{% trans "PDF:" %}</div>
+                                                                        <a href="{{ detail.pdf.url }}" class="btn btn-success col btn-sm" download>download</a>
+                                                                        <a href="{{ detail.pdf.url }}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
+                                                                    </li>
+                                                                    {% if detail.dxf %}
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        <div class="mr-2">{% trans "DXF:" %}</div>
+                                                                        <a href="{{ detail.dxf.url }}" class="btn btn-success col btn-sm" download>download</a>
+                                                                        <a href="//beta.sharecad.org/cadframe/load?url=https://18.196.79.50{{ detail.dxf.url }}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
+                                                                    </li>
+                                                                    {% endif %}
+                                                                    {% if detail.step %}
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        <div class="mr-2">{% trans "STEP:" %}</div>
+                                                                        <a href="{{ detail.step.url }}" class="btn btn-success col btn-sm" download>download</a>
+                                                                        <a href="//beta.sharecad.org/cadframe/load?url=https://18.196.79.50{{ detail.step.url }}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
+                                                                    </li>
+                                                                    {% endif %}
+                                                                    {% if detail.part %}
+                                                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                        <div class="mr-2">{% trans "PART:" %}</div>
+                                                                        <a href="{{ detail.part.url }}" class="btn btn-success col btn-sm" download>download</a>
+                                                                    </li>
+                                                                    {% endif %}
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+
+                                                      </div>
+                                                      <div class="modal-footer">
+                                                        <a href="{% url 'cod_detail_update' pk=detail.pk %}" type="button" class="btn btn-warning">UPDATE</a>
+                                                        <a href="{% url 'cod_detail_delete' pk=detail.pk %}" type="button" class="btn btn-danger">DELETE</a>
+                                                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                                      </div>
+                                                    </div>
+                                                  </div>
+                                                </div>
+
+                                            </ul>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                                <div class="mt-4" align="center">
+                                    <a href="{% url 'create_xls_project' url=order.pk %}"
+                                       class="list-group-item list-group-item-action list-group-item-primary">
+                                        {% trans "CREATE 'XLS' PROJECT" %}
+                                    </a>
+
+                                </div>             
+                            </div>
                         </div>
                     </div>
-                </div>
-                </div>
-                <div class="card-footer bg-transparent" align="center">
-                    {% if user == order.author %}
-                    <div class="list-group list-group-horizontal">
-                        <a href="{% url 'cod_order_delete' pk=order.pk %}"
-                           class="list-group-item list-group-item-action list-group-item-danger">
-                            {% trans "Delete" %}
-                        </a>
-                        <a href="{% url 'order_update' pk=order.pk %}"
-                           class="list-group-item list-group-item-action list-group-item-warning">
-                            {% trans "Update" %}
-                        </a>
-                        <a href="{% url 'send_order_to_friend' pk=order.pk %}" class="list-group-item list-group-item-action list-group-item-success disabled"
-                           tabindex="-1" aria-disabled="true">
-                            {% trans "Send friend" %}
-                        </a>
+                    <!--Описание заказа и деталей-->
+
+                    <!--Предложения-->
+                    <div class="col-sm-5">
+                        <div class="card ml-2 mr-2">
+                            <div class="card-header mb-3" align="center">
+                                {% trans "Suggestions" %}
+                            </div>
+                            {% if request.user == order.author %}
+                                <div class="overflow-auto" style="height: 41rem;">
+                                    {% if suggestions %}
+                                        {% for suggestion in suggestions %}
+                                                <ul class="list-group ml-1 mr-1">
+                                                    <div class="mb-3" style="max-width: 44rem;">
+                                                        {% if suggestion.status == 'Discussion' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% elif suggestion.status == 'InWork' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% elif suggestion.status == 'Done' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-dark">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% elif suggestion.status == 'Canceled' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-warning">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% endif %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER PRICE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.offer_price}}</span>
+                                                        </li>
+                                                        <li class="list-group-item align-items-center">
+                                                            {{suggestion.offer_description}}
+                                                        </li>
+                                                        <li class="list-group-item align-items-center">
+                                                            <div class="list-group list-group-horizontal">
+                                                                <a href="{% url 'suggestion_detail' url=suggestion.pk %}"
+                                                                   class="list-group-item list-group-item-action list-group-item-info">
+                                                                    {% trans "Detail" %}
+                                                                </a>
+                                                                {% if order.status == 'Discussion' %}
+                                                                <a href="{% url 'change_status' url=suggestion.pk %}"
+                                                                   class="list-group-item list-group-item-action list-group-item-success"
+                                                                   tabindex="-1" aria-disabled="true">
+                                                                    {% trans "Select" %}
+                                                                </a>
+                                                                {% else %}
+                                                                <a href="{% url 'change_status' url=suggestion.pk %}" class="list-group-item list-group-item-action list-group-item-success disabled"
+                                                                   tabindex="-1" aria-disabled="true">
+                                                                    {% trans "Select" %}
+                                                                </a>
+                                                                {% endif %}
+                                                            </div>
+                                                        </li>
+                                                    </div>
+                                                </ul>
+                                        {% endfor %}
+                                    {% else %}
+                                        <div class="col">
+                                            <small>
+                                                {% trans "There are no offers yet for this order. If the situation does" %}
+                                                {% trans "not change over a long period of time, then complete the" %}
+                                                {% trans "order with information or files by clicking 'UPDATE' order." %}
+                                            </small>
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            {% elif request.user != order.author %}
+
+                            {% if suggestions %}
+                                {% for suggestion in suggestions %}
+                                    {% if request.user == suggestion.author %}
+                                    <ul class="list-group ml-1 mr-1">
+                                                    <div class="mb-3" style="max-width: 44rem;">
+                                                        {% if suggestion.status == 'Discussion' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% elif suggestion.status == 'InWork' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-success">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% elif suggestion.status == 'Done' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-dark">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% elif suggestion.status == 'Canceled' %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-warning">
+                                                            {% trans "OFFER AUTHOR: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.author}}</span>
+                                                        </li>
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER DATE CRATE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.date_create}}</span>
+                                                        </li>
+                                                        {% endif %}
+                                                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                            {% trans "OFFER PRICE: " %}
+                                                            <span class="badge badge-primary mr-2">{{suggestion.offer_price}}</span>
+                                                        </li>
+                                                        <li class="list-group-item align-items-center">
+                                                            {{suggestion.offer_description}}
+                                                        </li>
+                                                        <li class="list-group-item align-items-center">
+                                                            <div class="list-group list-group-horizontal">
+                                                                <a href="{% url 'suggestion_detail' url=suggestion.pk %}"
+                                                                   class="list-group-item list-group-item-action list-group-item-info">
+                                                                    {% trans "Detail" %}
+                                                                </a>
+                                                            </div>
+                                                        </li>
+                                                    </div>
+                                                </ul>
+                                    {% endif %}
+                                {% endfor %}
+                            {% endif %}
+                            <div class="card-body">
+                                <a class="btn btn-primary btn-lg btn-block" href="{% url 'create_suggestion' url=order.pk %}" align="center">
+                                    {% trans "CREATE SUGGESTION" %}+
+                                </a>
+                            </div>
+                            {% endif %}
+                        </div>
                     </div>
+                    <!--Предложения-->
+
+                    <!--Для группового заказа-->
                     {% endif %}
                 </div>
             </div>
+            <div class="col-sm-2"></div>
         </div>
-        <!--Заказ-->
-        <!--Предложения для автора-->
-        <div class="suggestions2">
-            <div class="card ml-2 mr-2">
-                <div class="card-header" align="center">
-                    {% trans "Suggestions" %}
-                </div>
-                {% if request.user == order.author %}
-                    <div class="overflow-auto" style="height: 57rem;">
-                        {% if suggestions %}
-                        {% for suggestion in suggestions %}
-                        <div class="card-body">
-                            <div class="card mb-3" style="max-width: 44rem;">
-                                {% if suggestion.status == 'Discussion' %}
-                                <div class="card-header text-white bg-dark" align="center">
-                                {% elif suggestion.status == 'InWork' %}
-                                <div class="card-header text-white bg-success" align="center">
-                                {% elif suggestion.status == 'Done' %}
-                                <div class="card-header text-white bg-primary" align="center">
-                                {% elif suggestion.status == 'Canceled' %}
-                                <div class="card-header text-white bg-secondary" align="center">
-                                {% endif %}
-                                    <small class="col-5"></small>{{suggestion.author}}
-                                    <small class="col-5"></small>{{suggestion.date_create}}
-                                </div>
-                                <div class="card-body">
-                                    <h5 class="card-title col" align="center">{{suggestion.offer_price}}</h5>
-                                    <p class="card-text col" align="center">{{suggestion.offer_description}}</p>
-                                </div>
-                                <div class="card-footer bg-transparent border-dark" align="center">
-                                    <div class="list-group list-group-horizontal">
-                                        <a href="{% url 'suggestion_detail' url=suggestion.pk %}"
-                                           class="list-group-item list-group-item-action list-group-item-info">
-                                            {% trans "Detail" %}
-                                        </a>
-                                        {% if order.status == 'Discussion' %}
-                                        <a href="{% url 'change_status' url=suggestion.pk %}"
-                                           class="list-group-item list-group-item-action list-group-item-success"
-                                           tabindex="-1" aria-disabled="true">
-                                            {% trans "Select" %}
-                                        </a>
-                                        {% else %}
-                                        <a href="{% url 'change_status' url=suggestion.pk %}" class="list-group-item list-group-item-action list-group-item-success disabled"
-                                           tabindex="-1" aria-disabled="true">
-                                            {% trans "Select" %}
-                                        </a>
-                                        {% endif %}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        {% endfor %}
-                        {% else %}
-                            <div class="col">
-                                <small>
-                                    {% trans "There are no offers yet for this order. If the situation does" %}
-                                    {% trans "not change over a long period of time, then complete the" %}
-                                    {% trans "order with information or files by clicking 'UPDATE' order." %}
-                                </small>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% elif request.user != order.author %}
-                    <div class="card-body">
-                    <div class="card bg-light ml-3 mb-3" style="max-width: 44rem;">
-                      <div class="card-body">
-                        <a href="{% url 'create_suggestion' url=order.pk %}">
-                            <h3 class="card-title" align="center">Create suggestion</h3>
-                        </a>
-                      </div>
-                    </div>
-                </div>
-                {% endif %}
-            </div>
-        </div>
-        <!--Предложения для автора-->
     </div>
-    {% endif %}
+    <!-- Скрипт выравнивая высоты блоков по большему -->
+    <script type="text/javascript">
+           var mh = 0;
+           $(".card").each(function () {
+               var h_block = parseInt($(this).height());
+               if(h_block > mh) {
+                  mh = h_block;
+               };
+           });
+           $(".card").height(mh);
+    </script>
 
 {% endblock %}
+
+
+<!--
+    <div class="mb-2">
+                                                <img src="{{detail.image_cover.url}}" class="card-img-top" alt="...">
+                                                <ul class="list-group list-group-flush">
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info">
+                                                        {% trans "Detail name: " %}
+                                                        <span class="badge badge-primary mr-2">{{ detail.name }}</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info">
+                                                        {% trans "Amount: " %}
+                                                        <span class="badge badge-primary mr-2">{{ detail.amount }}</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info">
+                                                        {% trans "Material: " %}
+                                                        <span class="badge badge-primary mr-2">{{ detail.material }}</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info">
+                                                        {% trans "Whose material: " %}
+                                                        <span class="badge badge-primary mr-2">{{ detail.whose_material }}</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info">
+                                                        {% trans "Note: " %}
+                                                        <span class="badge badge-primary mr-2">{{ detail.Note }}</span>
+                                                    </li>
+                                                
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info">
+                                                        {% trans "Deadline: " %}
+                                                        <span class="badge badge-primary mr-2">{{ detail.Deadline }}</span>
+                                                    </li>
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info">
+                                                        {% trans "Availability date: " %}
+                                                        <span class="badge badge-primary mr-2">{{ detail.Availability_date }}</span>
+                                                    </li>
+                                                    <li class="list-group-item">
+                                                        {% trans "Detail files:" %}
+                                                    </li>
+                                                    {% if detail.pdf %}
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info">
+                                                        <div class="mr-2">{% trans "PDF:" %}</div>
+                                                        <a href="{{ detail.pdf.url }}" class="btn btn-success col btn-sm" download>download</a>
+                                                        <a href="{{ detail.pdf.url }}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
+                                                    </li>
+                                                    {% endif %}
+                                                    {% if detail.dxf %}
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info">
+                                                        <div class="mr-2">{% trans "DXF:" %}</div>
+                                                        <a href="{{ detail.dxf.url }}" class="btn btn-success col btn-sm" download>download</a>
+                                                        <a href="//beta.sharecad.org/cadframe/load?url=https://18.196.79.50{{ detail.dxf.url }}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
+                                                        
+
+                                                   
+                                                        <div class="modal fade" id="exampleModalCenter3" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
+                                                          <div class="modal-dialog modal-dialog-centered" role="document">
+                                                            <div class="modal-content" style="width:55rem; right:10rem;" align="center">
+                                                              <div class="modal-header" >
+                                                                <h5 class="modal-title" id="exampleModalCenterTitle3" >DXF Veiwer</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                  <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                              </div>
+                                                              <div class="modal-body">
+                                                          
+                                                                <iframe src="//sharecad.org/cadframe/load?url=https://18.196.79.50{{ detail.dxf.url }}" scrolling="no" style="height:40rem; width:50rem;"></iframe>
+                                                              </div>
+                                                              <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary col" data-dismiss="modal">Close</button>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                    </li>
+                                                    {% endif %}
+                                                    {% if detail.step %}
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info">
+                                                        <div class="mr-2">{% trans "STEP:" %}</div>
+                                                        <a href="{{ detail.step.url }}" class="btn btn-success col btn-sm" download>download</a>
+                                                        <a href="//beta.sharecad.org/cadframe/load?url=https://18.196.79.50{{ detail.step.url }}" class="btn btn-info col btn-sm ml-2" target="_blank">view</a>
+                                                       
+
+                                                     
+                                                        <div class="modal fade" id="exampleModalCenter4" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
+                                                          <div class="modal-dialog modal-dialog-centered" role="document">
+                                                            <div class="modal-content" style="width:55rem; right:10rem;" align="center">
+                                                              <div class="modal-header" >
+                                                                <h5 class="modal-title" id="exampleModalCenterTitle4" >DXF Veiwer</h5>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                  <span aria-hidden="true">&times;</span>
+                                                                </button>
+                                                              </div>
+                                                              <div class="modal-body">
+                                                    
+                                                                <iframe src="//sharecad.org/cadframe/load?url=https://18.196.79.50{{ detail.step.url }}" scrolling="no" style="height:40rem; width:50rem;"></iframe>
+                                                              </div>
+                                                              <div class="modal-footer">
+                                                                <button type="button" class="btn btn-secondary col" data-dismiss="modal">Close</button>
+                                                              </div>
+                                                            </div>
+                                                          </div>
+                                                        </div>
+                                                    </li>
+                                                    {% endif %}
+                                                    {% if detail.part %}
+                                                    <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-info ">
+                                                        <div class="mr-2">{% trans "PART:" %}</div>
+                                                        <a href="{{ detail.part.url }}" class="btn btn-success col btn-sm" download>download</a>
+                                                    </li>
+                                                    {% endif %}
+                                                </ul>
+                                            </div>-->

@@ -14,8 +14,4 @@ urlpatterns = [
     path('dashboard-message-view/<slug:url>/', das_views.messages, name='dashboard-message-view'),
 
     path('dashboard-sug/active/', dashboard_sug_active, name='dashboard_sug_active'),
-
-    path('dashboard-order/<slug:url>/', views.OrderAndSuggestionView.as_view(model=CODOrder,
-                                                                                  template_name='orders/order.html'),
-            name='order_detail'),
 ]

@@ -7,15 +7,16 @@ from django.db.models import Count
 from django.contrib import messages
 from django.http import HttpResponseRedirect
 # Apps
-from orders.models import Suggestion, Order
+from orders.models import CODOrder
+from suggestions.models import CODSuggestion
 # Local
 from .models import Message
 from .forms import MessageCreateForm
 
 
 def message_of_suggestion(request, pk):
-    suggestion = Suggestion.objects.get(pk=pk)
-    suggestion_order = Order.objects.get(pk=suggestion.order.pk)
+    suggestion = CODSuggestion.objects.get(pk=pk)
+    suggestion_order = CODOrder.objects.get(pk=suggestion.order.pk)
     if request.method == 'POST':
         form = MessageCreateForm(request.POST)
         if form.is_valid():

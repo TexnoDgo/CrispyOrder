@@ -3,11 +3,14 @@
 {% block title %}{% trans "Log Out" %}{% endblock %}
 
 {% block content %}
-    <div class="container">
-        <legend class="border-bottom mb-4" align="center">{% trans "You have been logged out" %}</legend>
-        <div class="jumbotron jumbotron-fluid">
+
+<div class="block col mb-5 mt-5">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8 mt-3" align="center">
+            <div class="jumbotron jumbotron-fluid">
               <div class="container">
-                <h1 class="display-4">{% trans "Thank you for using Crispy Machine" %}</h1>
+                <h1 class="display-4">{% trans "Thank you for using Crispy Order" %}</h1>
                 <p class="lead">
                     {% trans "Stay tuned for " %}
                     <a href="">{% trans "new orders."%}</a>
@@ -18,11 +21,14 @@
                 </p>
               </div>
             </div>
-        <div class="border-top pt-3">
-            <small class="text-muted">
-                <a href="{% url 'login' %}">Log In Again</a>
-            </small>
+            <div class="border-top pt-3">
+                <small class="text-muted">
+                    <a href="{% url 'login' %}">Log In Again</a>
+                </small>
+            </div>
         </div>
     </div>
+</div>
+
 {% endblock %}
 

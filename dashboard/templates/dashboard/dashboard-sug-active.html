@@ -1,328 +1,329 @@
 {% extends "HomePage/base.html" %}
 {% load i18n %}
-{% block title %}{% trans "CrispyMachine - You Suggestions" %}{% endblock %}
+{% block title %}{% trans "CO | MY SUGGESTIONS" %}{% endblock %}
 {% load static %}
 {% load bootstrap_pagination %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'dashboard/style.css' %}">
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{% trans "You Suggestions" %}</li>
-  </ol>
-</nav>
+<div class="block col mb-4" style=" background:#FFFFFF;">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8 mt-3" align="center" style=" background:#FFFFF0;">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "HOME" %}</a></li>
+                  <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "DASHBOARD" %} - "{{user.username}}"</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans "MY SUGGESTIONS" %}</li>
+              </ol>
+            </nav>
+            <div class="col mt-2" style=" min-height: 30rem;">
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist" align="center">
+                        <a class="nav-item nav-link active col" id="nav-discussion-tab" data-toggle="tab" href="#nav-discussion"
+                           role="tab" aria-controls="nav-discussion" aria-selected="true">
+                            {% trans "DISCUSSION Suggestions" %}
+                        </a>
+                        <a class="nav-item nav-link col" id="nav-work-tab" data-toggle="tab" href="#nav-work"
+                           role="tab" aria-controls="nav-work" aria-selected="false">
+                            {% trans "WORK Suggestions" %}
+                        </a>
+                        <a class="nav-item nav-link col" id="nav-done-tab" data-toggle="tab" href="#nav-done"
+                           role="tab" aria-controls="nav-done" aria-selected="false">
+                            {% trans "DONE Suggestions" %}
+                        </a>
+                        <a class="nav-item nav-link col" id="nav-canceled-tab" data-toggle="tab" href="#nav-canceled"
+                           role="tab" aria-controls="nav-canceled" aria-selected="false">
+                            {% trans "CANCELED Suggestions" %}
+                        </a>
+                        <a class="nav-item nav-link col" id="nav-featured-tab" data-toggle="tab" href="#nav-featured"
+                           role="tab" aria-controls="nav-featured" aria-selected="false">
+                            {% trans "FEATURED Suggestions" %}
+                        </a>
+                    </div>
+                </nav>
+                <div class="tab-content" id="nav-tabContent">
 
-<legend class="border-bottom mb-4" align="center">{% trans "YOUR SUGGESTIONS" %}</legend>
+                    <div class="tab-pane fade show active mt-3" id="nav-discussion" role="tabpanel" aria-labelledby="nav-discussion-tab">
+                        {% if Discussion_suggestions_obj %}
+                            <div class="row row-cols-1 row-cols-md-3 mt-2" >
+                              {% for obj in Discussion_suggestions_obj %}
+                                <div class="col mb-3">
+                                  <div class="card border-dark ">
+                                    <img class="card-img-top text-white bg-secondary" src="{{obj.order.image_cover.url }}" width="200" height="auto">
+                                    <div class="card-body text-white bg-secondary">
+                                      <h5 class="card-title text-white bg-secondary">{% trans "ORDER №" %}{{obj.order.id}} - "{{ obj.order.title }}"</h5>
+                                      <p class="card-text">{{ obj.order.description }}</p>
+                                    </div>
+                                    <div class="card-footer text-white bg-secondary ">
+                                      <a class="btn btn-dark col"
+                                         href="{% url 'order_and_suggestion_view' url=obj.order.pk %}">
+                                          {% trans "ORDER DETAIL" %} 
+                                      </a>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{% trans "SUGGESTION №" %}{{obj.id}}</h5>
+                                        
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {% trans "OFFER CREATE: " %}
+                                                <span class="badge badge-primary mr-2">{{ obj.date_create }}</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {% trans "OFFER DEADLINE: " %}
+                                                <span class="badge badge-primary mr-2">{{ obj.deadline }}</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {% trans "OFFER PRICE: " %}
+                                                <span class="badge badge-primary mr-2">{{ obj.offer_price }}</span>
+                                            </li>
+                                        </ul>
+                                        <p class="card-text">{{ obj.offer_description }}</p>
+                                    </div>
+                                    <div class="card-footer">
+                                    <a class="btn btn-outline-dark col" href="{% url 'suggestion_detail' url=obj.pk %}">
+                                        {% trans "SUGGESTION DETAIL" %} 
+                                    </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              {% endfor %}
+                            </div>
+                            <div class="row">
+                            <div class="col-sm-9" align="center">
+                            </div>
+                            <div class="col-sm-3">
+                              <div class="pagination mt-4 mb-4">
+                                {% bootstrap_paginate Discussion_suggestions_obj range=3 %}
+                              </div>
+                            </div>
+                            </div>
+                        {% else %}
+                            <div class="row" style="width: 100%;">
+                                <div class="col mb-4"  align="center">
+                                    <small>
+                                        {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
+                                        <a href="{% url 'create_single_order' %}">{% trans "create single order" %}</a>
+                                        {% trans " or" %}
+                                        <a href="{% url 'create_multiple_order' %}">{% trans "create multiple order" %}</a>
+                                    </small>
+                                </div>
+                            </div>
+                        {% endif %}
+                    </div>
 
-<nav>
-    <div class="nav nav-tabs" id="nav-tab" role="tablist" align="center">
-        <a class="nav-item nav-link active col" id="nav-discussion-tab" data-toggle="tab" href="#nav-discussion"
-           role="tab" aria-controls="nav-discussion" aria-selected="true">
-            {% trans "DISCUSSION Suggestions" %}
-        </a>
-        <a class="nav-item nav-link col" id="nav-work-tab" data-toggle="tab" href="#nav-work"
-           role="tab" aria-controls="nav-work" aria-selected="false">
-            {% trans "WORK Suggestions" %}
-        </a>
-        <a class="nav-item nav-link col" id="nav-done-tab" data-toggle="tab" href="#nav-done"
-           role="tab" aria-controls="nav-done" aria-selected="false">
-            {% trans "DONE Suggestions" %}
-        </a>
-        <a class="nav-item nav-link col" id="nav-canceled-tab" data-toggle="tab" href="#nav-canceled"
-           role="tab" aria-controls="nav-canceled" aria-selected="false">
-            {% trans "CANCELED Suggestions" %}
-        </a>
-        <a class="nav-item nav-link col" id="nav-featured-tab" data-toggle="tab" href="#nav-featured"
-           role="tab" aria-controls="nav-featured" aria-selected="false">
-            {% trans "FEATURED Suggestions" %}
-        </a>
-    </div>
-</nav>
-<div class="tab-content" id="nav-tabContent">
-    <div class="tab-pane fade show active mt-3" id="nav-discussion" role="tabpanel" aria-labelledby="nav-discussion-tab">
-        <div class="row row-cols-1 row-cols-md-3 ml-3">
-            {% for form in suggestions %}
-            {% csrf_token %}
-                {% if form.status == 'Discussion' %}
-                    {% for one_order in orders %}
-                        {% if form.order.id == one_order.id %}
-                            <div class="col mb-4">
-                                <div class="card border-dark mb-3" style="max-width: 32rem;">
-                                    <div class="card-header bg-transparent border-dark">
-                                        <p class="card-text">
-                                            <small class="text-muted">
-                                                {% trans "Offer created: " %} {{ form.date_create }}
-                                            </small>
-                                            <small class="text-muted col">
-                                                {% trans "Proposal author: " %} {{ form.author }}
-                                            </small>
-                                            <small class="text-muted ml-3">
-                                                {% for profile in profiles %}
-                                                    {% if profile.user == form.author %}
-                                                        {% trans "Rating: " %}
-                                                        <span class="badge badge-success">{{ profile.rating }}</span>
-                                                    {% endif %}
-                                                {% endfor %}
-                                            </small>
-                                        </p>
+                    <div class="tab-pane fade mt-3" id="nav-work" role="tabpanel" aria-labelledby="nav-work-tab">
+                        {% if InWork_suggestions_obj %}
+                            <div class="row row-cols-1 row-cols-md-3 mt-2" >
+                              {% for obj in InWork_suggestions_obj %}
+                                <div class="col mb-3">
+                                  <div class="card border-dark ">
+                                    <img class="card-img-top text-white bg-secondary" src="{{obj.order.image_cover.url }}" width="200" height="auto">
+                                    <div class="card-body text-white bg-secondary">
+                                      <h5 class="card-title text-white bg-secondary">{% trans "ORDER №" %}{{obj.order.id}} - "{{ obj.order.title }}"</h5>
+                                      <p class="card-text">{{ obj.order.description }}</p>
                                     </div>
-                                    <div class="card-body text-dark">
-                                        <p class="card-text">{{ form.offer_description }}</p>
+                                    <div class="card-footer text-white bg-secondary ">
+                                      <a class="btn btn-dark col"
+                                         href="{% url 'order_and_suggestion_view' url=obj.order.pk %}">
+                                          {% trans "ORDER DETAIL" %} 
+                                      </a>
                                     </div>
-                                    <div class="card-footer bg-transparent border-dark">
-                                        <p class="card-text">
-                                            <small class="text-muted">
-                                                {% trans "Deadline: " %}{{ form.deadline }}
-                                            </small>
-                                            <small class="text-muted ml-2">
-                                                {% trans "Offer price: " %}{{ form.offer_price}}&#8372;
-                                            </small>
-                                            <small class="text-muted ml-2">
-                                                <a href="{% url 'suggestion_detail' url=form.id %}" type="button"
-                                                   class="btn btn-outline-info btn-sm">
-                                                    {% trans "Suggestion Details" %}
-                                                </a>
-                                            </small>
-                                        </p>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{% trans "SUGGESTION №" %}{{obj.id}}</h5>
+                                        
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {% trans "OFFER CREATE: " %}
+                                                <span class="badge badge-primary mr-2">{{ obj.date_create }}</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {% trans "OFFER DEADLINE: " %}
+                                                <span class="badge badge-primary mr-2">{{ obj.deadline }}</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {% trans "OFFER PRICE: " %}
+                                                <span class="badge badge-primary mr-2">{{ obj.offer_price }}</span>
+                                            </li>
+                                        </ul>
+                                        <p class="card-text">{{ obj.offer_description }}</p>
                                     </div>
-                                    <div class="card-footer bg-transparent border-dark">
-                                        <div class="row no-gutters">
-                                            <div class="col">
-                                                <div class="card-body">
-                                                    <h5 class="card-title">{{ one_order.title }}</h5>
-                                                    <p class="card-text">{{ one_order.description }}</p>
-                                                    <p class="card-text">
-                                                        <a class="btn btn-outline-success col-12 btn-sm"
-                                                           href="{% url 'order_and_suggestion_view' url=one_order.id %}">
-                                                            {% trans "Order Details" %}
-                                                        </a>
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </div>
+                                    <div class="card-footer">
+                                    <a class="btn btn-outline-dark col" href="{% url 'suggestion_detail' url=obj.pk %}">
+                                        {% trans "SUGGESTION DETAIL" %} 
+                                    </a>
                                     </div>
+                                  </div>
+                                </div>
+                              {% endfor %}
+                            </div>
+                            <div class="row">
+                            <div class="col-sm-9" align="center">
+                            </div>
+                            <div class="col-sm-3">
+                              <div class="pagination mt-4 mb-4">
+                                {% bootstrap_paginate InWork_suggestions_obj range=3 %}
+                              </div>
+                            </div>
+                            </div>
+                        {% else %}
+                            <div class="row" style="width: 100%;">
+                                <div class="col mb-4"  align="center">
+                                    <small>
+                                        {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
+                                        <a href="{% url 'create_single_order' %}">{% trans "create single order" %}</a>
+                                        {% trans " or" %}
+                                        <a href="{% url 'create_multiple_order' %}">{% trans "create multiple order" %}</a>
+                                    </small>
                                 </div>
                             </div>
                         {% endif %}
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-    <div class="tab-pane fade mt-3" id="nav-work" role="tabpanel" aria-labelledby="nav-work-tab">
-        <div class="row row-cols-1 row-cols-md-2 ml-2">
-            {% for form in suggestions %}
-                {% if form.status == 'InWork' %}
-                    {% for one_order in orders %}
-                        {% if form.order.id == one_order.id %}
-                            <div class="col mb-4">
-                                <div class="card border-dark mb-3" style="max-width: 32rem;">
-                                <div class="card-header bg-transparent border-dark">
-                                    <p class="card-text">
-                                        <small class="text-muted">
-                                            {% trans "Offer created: " %} {{ form.date_create }}
-                                        </small>
-                                        <small class="text-muted col">
-                                            {% trans "Proposal author: " %} {{ form.author }}
-                                        </small>
-                                        <small class="text-muted ml-3">
-                                            {% for profile in profiles %}
-                                                {% if profile.user == form.author %}
-                                                    {% trans "Rating: " %}
-                                                    <span class="badge badge-success">{{ profile.rating }}</span>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </small>
-                                    </p>
-                                </div>
-                                <div class="card-body text-dark">
-                                    <p class="card-text">{{ form.offer_description }}</p>
-                                </div>
-                                <div class="card-footer bg-transparent border-dark">
-                                    <p class="card-text">
-                                        <small class="text-muted">
-                                            {% trans "Deadline: " %}{{ form.deadline }}
-                                        </small>
-                                        <small class="text-muted ml-2">
-                                            {% trans "Offer price: " %}{{ form.offer_price}}&#8372;
-                                        </small>
-                                        <small class="text-muted ml-2">
-                                            <a href="{% url 'suggestion_detail' url=form.id %}" type="button"
-                                               class="btn btn-outline-info btn-sm">
-                                                {% trans "Suggestion Details" %}
-                                            </a>
-                                        </small>
-                                    </p>
-                                </div>
-                                <div class="card-footer bg-transparent border-dark">
-                                    <div class="row no-gutters">
-                                        <div class="col">
-                                            <div class="card-body">
-                                                <h5 class="card-title">{{ one_order.title }}</h5>
-                                                <p class="card-text">{{ one_order.description }}</p>
-                                                <p class="card-text">
-                                                    <a class="btn btn-outline-success col-12 btn-sm"
-                                                       href="{% url 'order_and_suggestion_view' url=one_order.id %}">
-                                                        {% trans "Order Details" %}
-                                                    </a>
-                                                </p>
-                                            </div>
-                                        </div>
+                    </div>
+
+                    <div class="tab-pane fade mt-3" id="nav-done" role="tabpanel" aria-labelledby="nav-done-tab">
+                        {% if Done_suggestions_obj %}
+                            <div class="row row-cols-1 row-cols-md-3 mt-2" >
+                              {% for obj in Done_suggestions_obj %}
+                                <div class="col mb-3">
+                                  <div class="card border-dark ">
+                                    <img class="card-img-top text-white bg-secondary" src="{{obj.order.image_cover.url }}" width="200" height="auto">
+                                    <div class="card-body text-white bg-secondary">
+                                      <h5 class="card-title text-white bg-secondary">{% trans "ORDER №" %}{{obj.order.id}} - "{{ obj.order.title }}"</h5>
+                                      <p class="card-text">{{ obj.order.description }}</p>
                                     </div>
+                                    <div class="card-footer text-white bg-secondary ">
+                                      <a class="btn btn-dark col"
+                                         href="{% url 'order_and_suggestion_view' url=obj.order.pk %}">
+                                          {% trans "ORDER DETAIL" %} 
+                                      </a>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{% trans "SUGGESTION №" %}{{obj.id}}</h5>
+                                        
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {% trans "OFFER CREATE: " %}
+                                                <span class="badge badge-primary mr-2">{{ obj.date_create }}</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {% trans "OFFER DEADLINE: " %}
+                                                <span class="badge badge-primary mr-2">{{ obj.deadline }}</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {% trans "OFFER PRICE: " %}
+                                                <span class="badge badge-primary mr-2">{{ obj.offer_price }}</span>
+                                            </li>
+                                        </ul>
+                                        <p class="card-text">{{ obj.offer_description }}</p>
+                                    </div>
+                                    <div class="card-footer">
+                                    <a class="btn btn-outline-dark col" href="{% url 'suggestion_detail' url=obj.pk %}">
+                                        {% trans "SUGGESTION DETAIL" %} 
+                                    </a>
+                                    </div>
+                                  </div>
                                 </div>
+                              {% endfor %}
                             </div>
+                            <div class="row">
+                            <div class="col-sm-9" align="center">
+                            </div>
+                            <div class="col-sm-3">
+                              <div class="pagination mt-4 mb-4">
+                                {% bootstrap_paginate Done_suggestions_obj range=3 %}
+                              </div>
+                            </div>
+                            </div>
+                        {% else %}
+                            <div class="row" style="width: 100%;">
+                                <div class="col mb-4"  align="center">
+                                    <small>
+                                        {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
+                                        <a href="{% url 'create_single_order' %}">{% trans "create single order" %}</a>
+                                        {% trans " or" %}
+                                        <a href="{% url 'create_multiple_order' %}">{% trans "create multiple order" %}</a>
+                                    </small>
+                                </div>
                             </div>
                         {% endif %}
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-    <div class="tab-pane fade mt-3" id="nav-done" role="tabpanel" aria-labelledby="nav-done-tab">
-        <div class="row row-cols-1 row-cols-md-3 ml-3">
-            {% for form in suggestions %}
-                {% if form.status == 'Done' %}
-                    {% for one_order in orders %}
-                        {% if form.order.id == one_order.id %}
-                          <div class="col mb-4">
-                                <div class="card border-dark mb-3" style="max-width: 32rem;">
-                                <div class="card-header bg-transparent border-dark">
-                                    <p class="card-text">
-                                        <small class="text-muted">
-                                            {% trans "Offer created: " %} {{ form.date_create }}
-                                        </small>
-                                        <small class="text-muted col">
-                                            {% trans "Proposal author: " %} {{ form.author }}
-                                        </small>
-                                        <small class="text-muted ml-3">
-                                            {% for profile in profiles %}
-                                                {% if profile.user == form.author %}
-                                                    {% trans "Rating: " %}
-                                                    <span class="badge badge-success">{{ profile.rating }}</span>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </small>
-                                    </p>
-                                </div>
-                                <div class="card-body text-dark">
-                                    <p class="card-text">{{ form.offer_description }}</p>
-                                </div>
-                                <div class="card-footer bg-transparent border-dark">
-                                    <p class="card-text">
-                                        <small class="text-muted">
-                                            {% trans "Deadline: " %}{{ form.deadline }}
-                                        </small>
-                                        <small class="text-muted ml-2">
-                                            {% trans "Offer price: " %}{{ form.offer_price}}&#8372;
-                                        </small>
-                                        <small class="text-muted ml-2">
-                                            <a href="{% url 'suggestion_detail' url=form.id %}" type="button"
-                                               class="btn btn-outline-info btn-sm">
-                                                {% trans "Suggestion Details" %}
-                                            </a>
-                                        </small>
-                                    </p>
-                                </div>
-                                <div class="card-footer bg-transparent border-dark">
-                                    <div class="row no-gutters">
-                                        <div class="col">
-                                            <div class="card-body">
-                                                <h5 class="card-title">{{ one_order.title }}</h5>
-                                                <p class="card-text">{{ one_order.description }}</p>
-                                                <p class="card-text">
-                                                    <a class="btn btn-outline-success col-12 btn-sm"
-                                                       href="{% url 'order_and_suggestion_view' url=one_order.id %}">
-                                                        {% trans "Order Details" %}
-                                                    </a>
-                                                </p>
-                                            </div>
-                                        </div>
+                    </div>
+
+                    <div class="tab-pane fade mt-3" id="nav-canceled" role="tabpanel" aria-labelledby="nav-canceled-tab">
+                        {% if Canceled_suggestions_obj %}
+                            <div class="row row-cols-1 row-cols-md-3 mt-2" >
+                              {% for obj in Canceled_suggestions_obj %}
+                                <div class="col mb-3">
+                                  <div class="card border-dark ">
+                                    <img class="card-img-top text-white bg-secondary" src="{{obj.order.image_cover.url }}" width="200" height="auto">
+                                    <div class="card-body text-white bg-secondary">
+                                      <h5 class="card-title text-white bg-secondary">{% trans "ORDER №" %}{{obj.order.id}} - "{{ obj.order.title }}"</h5>
+                                      <p class="card-text">{{ obj.order.description }}</p>
                                     </div>
+                                    <div class="card-footer text-white bg-secondary ">
+                                      <a class="btn btn-dark col"
+                                         href="{% url 'order_and_suggestion_view' url=obj.order.pk %}">
+                                          {% trans "ORDER DETAIL" %} 
+                                      </a>
+                                    </div>
+                                    <div class="card-body">
+                                        <h5 class="card-title">{% trans "SUGGESTION №" %}{{obj.id}}</h5>
+                                        
+                                        <ul class="list-group list-group-flush">
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {% trans "OFFER CREATE: " %}
+                                                <span class="badge badge-primary mr-2">{{ obj.date_create }}</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {% trans "OFFER DEADLINE: " %}
+                                                <span class="badge badge-primary mr-2">{{ obj.deadline }}</span>
+                                            </li>
+                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                {% trans "OFFER PRICE: " %}
+                                                <span class="badge badge-primary mr-2">{{ obj.offer_price }}</span>
+                                            </li>
+                                        </ul>
+                                        <p class="card-text">{{ obj.offer_description }}</p>
+                                    </div>
+                                    <div class="card-footer">
+                                    <a class="btn btn-outline-dark col" href="{% url 'suggestion_detail' url=obj.pk %}">
+                                        {% trans "SUGGESTION DETAIL" %} 
+                                    </a>
+                                    </div>
+                                  </div>
                                 </div>
+                              {% endfor %}
                             </div>
+                            <div class="row">
+                            <div class="col-sm-9" align="center">
+                            </div>
+                            <div class="col-sm-3">
+                              <div class="pagination mt-4 mb-4">
+                                {% bootstrap_paginate Canceled_suggestions_obj range=3 %}
+                              </div>
+                            </div>
+                            </div>
+                        {% else %}
+                            <div class="row" style="width: 100%;">
+                                <div class="col mb-4"  align="center">
+                                    <small>
+                                        {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
+                                        <a href="{% url 'create_single_order' %}">{% trans "create single order" %}</a>
+                                        {% trans " or" %}
+                                        <a href="{% url 'create_multiple_order' %}">{% trans "create multiple order" %}</a>
+                                    </small>
+                                </div>
                             </div>
                         {% endif %}
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
+                    </div>
+
+                    <div class="tab-pane fade mt-3" id="nav-featured" role="tabpanel" aria-labelledby="nav-featured-tab">...</div>
+
+                </div>
+            </div>
         </div>
     </div>
-    <div class="tab-pane fade mt-3" id="nav-canceled" role="tabpanel" aria-labelledby="nav-canceled-tab">
-        <div class="row row-cols-1 row-cols-md-3 ml-3">
-            {% for form in suggestions %}
-                {% if form.status == 'Canceled' %}
-                    {% for one_order in orders %}
-                        {% if form.order.id == one_order.id %}
-                          <div class="col mb-4">
-                                <div class="card border-dark mb-3" style="max-width: 32rem;">
-                                <div class="card-header bg-transparent border-dark">
-                                    <p class="card-text">
-                                        <small class="text-muted">
-                                            {% trans "Offer created: " %} {{ form.date_create }}
-                                        </small>
-                                        <small class="text-muted col">
-                                            {% trans "Proposal author: " %} {{ form.author }}
-                                        </small>
-                                        <small class="text-muted ml-3">
-                                            {% for profile in profiles %}
-                                                {% if profile.user == form.author %}
-                                                    {% trans "Rating: " %}
-                                                    <span class="badge badge-success">{{ profile.rating }}</span>
-                                                {% endif %}
-                                            {% endfor %}
-                                        </small>
-                                    </p>
-                                </div>
-                                <div class="card-body text-dark">
-                                    <p class="card-text">{{ form.offer_description }}</p>
-                                </div>
-                                <div class="card-footer bg-transparent border-dark">
-                                    <p class="card-text">
-                                        <small class="text-muted">
-                                            {% trans "Deadline: " %}{{ form.deadline }}
-                                        </small>
-                                        <small class="text-muted ml-2">
-                                            {% trans "Offer price: " %}{{ form.offer_price}}&#8372;
-                                        </small>
-                                        <small class="text-muted ml-2">
-                                            <a href="{% url 'suggestion_detail' url=form.id %}" type="button"
-                                               class="btn btn-outline-info btn-sm">
-                                                {% trans "Suggestion Details" %}
-                                            </a>
-                                        </small>
-                                    </p>
-                                </div>
-                                <div class="card-footer bg-transparent border-dark">
-                                    <div class="row no-gutters">
-                                        <div class="col-md-4">
-                                            <img src="{{one_order.image_view.url }}" class="card-img" alt="...">
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div class="card-body">
-                                                <h5 class="card-title">{{ one_order.title }}</h5>
-                                                <p class="card-text">{{ one_order.description }}</p>
-                                                <p class="card-text">
-                                                    <a class="btn btn-outline-success col-12 btn-sm"
-                                                       href="{% url 'order_and_suggestion_view' url=one_order.id %}">
-                                                        {% trans "Order Details" %}
-                                                    </a>
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            </div>
-                        {% endif %}
-                    {% endfor %}
-                {% endif %}
-            {% endfor %}
-        </div>
-    </div>
-    <div class="tab-pane fade mt-3" id="nav-featured" role="tabpanel" aria-labelledby="nav-featured-tab">...</div>
 </div>
+
 {% endblock %}
 

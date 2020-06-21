@@ -1,101 +1,99 @@
 {% extends "HomePage/base.html" %}
 {% load i18n %}
-{% block title %}{% trans "CrispyMachine - All orders" %}{% endblock %}
+{% block title %}{% trans "CO | ALL ORDERS" %}{% endblock %}
 {% load static %}
 {% load bootstrap_pagination %}
 
 {% block content %}
-    <link rel="stylesheet" href="{% static 'orders/all_order_style.css' %}">
-            
-    <div class="block" style="height:100rem; background:#FFFFFF;">
+<link rel="stylesheet" href="{% static 'orders/all_order_style.css' %}">
+
+
+<link rel="stylesheet" href="{% static 'orders/bootstrap-select.min.css' %}">
+<link rel="stylesheet" href="{% static 'orders/font-awesome.min.css' %}">
+
+
+<script src="{% static 'orders/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'orders/bootstrap-select.min.js' %}"></script>
+<script src="{% static 'orders/kekker.js' %}"></script>
+
+
+
+<div class="block" style=" background:#FFFFFF;">
+  <div class="row">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8 mt-3" align="center" style=" background:#FFFFF0;">
+      <div class="navigation">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "HOME" %}</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "ALL ORDERS" %}</li>
+          </ol>
+        </nav>
+      </div>
+
       <div class="row">
-          <div class="col-sm-2"></div>
-          <div class="col-sm-8 mt-3" align="center" style="height:98rem; background:#FFFFF0;">
-            <div class="navigation">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "HOME" %}</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">{% trans "ALL ORDERS" %}</li>
-                    </ol>
-                </nav>
-            </div>
-            
-            <div class="row">
-            
-              <div class="col-sm-2" style="height:90rem; background:#FFFFF0;">
-                <div class="list-group">
-                    <li class="list-group-item list-group-item list-group-item-secondary">
-                        {% trans "Category Filtering" %}
-                    </li>
-                    <div class="overflow-auto" style="height: 36rem;">
-                        {% for category in categories %}
-                            <li class="list-group-item list-group-item list-group-item">
-                                <div class="custom-control custom-switch">
-                                  <input type="checkbox" class="custom-control-input" id="customSwitch{{ category.title }}">
-                                  <label class="custom-control-label" for="customSwitch{{ category.title }}"><a href="{% url 'order_category_view' pk=category.pk %}">{{ category.title }}</a></label>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </div>
-                    <a href="#" class="list-group-item list-group-item-action list-group-item-success">
-                        {% trans "Accept" %}
-                    </a>
-                </div>
-    
-                <div class="list-group mt-4">
-                    <li class="list-group-item list-group-item list-group-item-secondary">
-                        {% trans "City Filtering" %}
-                    </li>
-                    <select class="custom-select my-1 mr-sm-2" id="inlineFormCustomSelectPref2">
-                      <option selected>Choose...</option>
-                      {% for one_city in city %}
-                      <option value="1">{{ one_city.title }}</option>
-                      {% endfor %}
-                    </select>
-                    <div class="overflow-auto" style="height: 36rem;">
-                    {% for one_city in city %}
-                        <a href="{% url 'order_city_view' pk=one_city.pk %}" class="list-group-item list-group-item-action list-group-item">
-                            {{ one_city.title }}
-                        </a>
+        <div class="col-sm-3" style="background:#FFFFF0;">
+          <div class="list-group">
+              <form method="get">
+                  <li class="list-group-item list-group-item ">
+                    {% trans "Category Filtering" %}<br>
+                      <hr>
+                      <small>{% trans "Select one or more categories to sort the order" %}</small>
+                  </li>
+                  <select multiple data-style="bg-white" class="selectpicker w-100 mt-2 mb-2" id="{{ filter.form.Categories }}">
+                    {% for cat in categories %}
+                      <option value="{{ cat }}">{{ cat }}</option>
                     {% endfor %}
-                    </div>
-                    <a href="#" class="list-group-item mt-1 list-group-item-action list-group-item-success">
-                        {% trans "Accept" %}
-                    </a>
-                </div>
-                
-              </div>
-              <div class="col-sm-10">
-              
-              <div class="row row-cols-1 row-cols-md-3 ml-3">
-                {% for order in orders_all %}
-                    <div class="col mb-4">
-                        <div class="card border-dark">
-                            <img class="card-img-top" src="{{order.image_cover.url }}" width="200" height="auto">
-                            <div class="card-body">
-                                <h5 class="card-title">{{ order.title }}</h5>
-                                <p class="card-text">{{ order.description }}</p>
-                            </div>
-                            <div class="card-footer bg-transparent border-dark">
-                                <a class="btn btn-outline-dark col"
-                                   href="{% url 'order_and_suggestion_view' url=order.pk %}">
-                                    {% trans "Details" %}
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                {% endfor %}
-                </div>
-                <div class="pagination">
-                    {% bootstrap_paginate orders_all range=6 %}
-                </div>   
-              </div>
-            </div>
+                  </select>
+
+                  <li class="list-group-item list-group-item mt-1">
+                    {% trans "City Filtering" %}
+                      <hr>
+                      <small>{% trans "Select only one city to sort the order" %}</small>
+                  </li>
+                  <select multiple data-style="bg-white" class="selectpicker w-100 mt-2 mb-2" id="{{ filter.form.city }}">
+                    {% for obj in city %}
+                      <option value="{{ obj }}">{{ obj }}</option>
+                    {% endfor %}
+                  </select>
+                  <button class="btn btn-outline-success col mt-2" type="submit">{% trans "ACCEPT" %}</button>
+              </form>
           </div>
-          
+        </div>
+        <div class="col-sm-9 mt-2">
+          <div class="card-columns">
+            {% for obj in page_obj %}
+              <div class="col mb-3">
+                <div class="card border-dark">
+                  <img class="card-img-top" src="{{obj.image_cover.url }}" width="200" height="auto">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ obj.title }}</h5>
+                    <p class="card-text">{{ obj.description }}</p>
+                  </div>
+                  <div class="card-footer bg-transparent border-dark">
+                    <a class="btn btn-outline-dark col"
+                       href="{% url 'order_and_suggestion_view' url=obj.pk %}">
+                        {% trans "Details" %} 
+                    </a>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+        
+    </div>
+  </div>
+  <div class="row mt-5">
+    <div class="col-sm-2"></div>
+    <div class="col-sm-8 mt-3" align="center" style=" background:#FFFFF0;">
+      <div class="pagination" style="position: absolute; right: 6rem;">
+        {% bootstrap_paginate page_obj range=6 %}
       </div>
     </div>
-
+  </div>
+</div>
 
 {% endblock %}
 

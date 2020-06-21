@@ -1,13 +1,13 @@
 body {
-    height: 65rem;
+    height: 100%;
 }
 
 .last {
-    width: 85%;
+    width: 75%;
     float: left;
 }
 
 .info {
-    width: 15%;
+    width: 25%;
     float: left;
 }

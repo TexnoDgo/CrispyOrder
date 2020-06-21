@@ -1,53 +1,58 @@
 {% extends "HomePage/base.html" %}
 {% load i18n %}
-{% block title %}{% trans "Dashboard" %}{% endblock %}
+{% block title %}{% trans "CO | MESSAGES" %}{% endblock %}
 {% load static %}
 {% load bootstrap_pagination %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'dashboard/style.css' %}">
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{% trans "You Messages" %}</li>
-  </ol>
-</nav>
-
-<legend class="border-bottom mb-4" align="center">{% trans "YOUR MESSAGES" %}</legend>
-
-<ul class="list-group list-group-horizontal">
-    <!--Заказы и предложения инфопанели-->
-    <li class="list-group-item list-group-item" style="width: 30rem; ">
-        <ul class="list-group">
-            <li class="list-group-item list-group-item-info">
-                {% trans "Dialogs" %}
-            </li>
-            <div class="overflow-auto" style="height: 35rem;">
-                {% for key, value in sort_suggestions.items %}
-                    {% if value in suggestions %}
-                    <small class="col">
-                    <a href="{% url 'dashboard-message-view' url=value.pk %}"
-                       class="list-group-item list-group-item-action">
-                        {{value.order}}
-                        <hr>
-                        {{value}}
-                    </a>
-                    {% endif %}
+<div class="block col mb-4" style=" background:#FFFFFF;">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8 mt-3" align="center" style=" background:#FFFFF0;">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "HOME" %}</a></li>
+                  <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "DASHBOARD" %} - "{{user.username}}"</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans "MESSAGES" %}</li>
+              </ol>
+            </nav>
+            <ul class="list-group list-group-horizontal">
+                <!--Заказы и предложения инфопанели-->
+                <li class="list-group-item list-group-item" style="width: 30rem; ">
+                    <ul class="list-group">
+                        <li class="list-group-item list-group-item-info">
+                            {% trans "Dialogs" %}
+                        </li>
+                        <div class="overflow-auto" style="height: 35rem;">
+                            {% for key, value in sort_suggestions.items %}
+                                {% if value in suggestions %}
+                                <small class="col">
+                                <a href="{% url 'dashboard-message-view' url=value.pk %}"
+                                   class="list-group-item list-group-item-action">
+                                    {{value.order}}
+                                    <hr>
+                                    {{value}}
+                                </a>
+                                {% endif %}
+                                </small>
+                            {% endfor %}
+                        </div>
+                    </ul>
+                </li>
+                <li class="list-group-item list-group-item" style="width: 60rem;">
+                    <small>
+                        {% trans "Welcome, choose a dialogue for communication. If you have not created orders or placed offers, do this," %}
+                        <a href="{% url 'create_single_order' %}">{% trans "create single order" %}</a>
+                        {% trans " or" %}
+                        <a href="{% url 'create_multiple_order' %}">{% trans "create multiple order" %}</a>
+                        {% trans "or place an offer for one of the orders here" %}
+                        <a href="{% url 'all_cod_order_view' %}">{% trans "all orders" %}</a>
                     </small>
-                {% endfor %}
-            </div>
-        </ul>
-    </li>
-        <li class="list-group-item list-group-item" style="width: 60rem;">
-            <small>
-                {% trans "Welcome, choose a dialogue for communication. If you have not created orders or placed offers, do this," %}
-                <a href="{% url 'order_create' %}">{% trans "create order" %}</a>
-                {% trans "or place an offer for one of the orders here" %}
-                <a href="{% url 'orders' %}">{% trans "all orders" %}</a>
-            </small>
-        </li>
-</ul>
-
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
 {% endblock %}

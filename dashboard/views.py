@@ -6,7 +6,8 @@ from django.http import HttpResponseRedirect
 from django.core.paginator import Paginator
 from django.contrib.auth.models import User
 # Apps
-from orders.models import CODOrder
+from orders.models import CODOrder, CODCategories, CODCity
+from orders.filter import OrdersFilter
 from suggestions.models import CODSuggestion
 from chat.models import CODMessage
 from users.models import Profile
@@ -42,33 +43,46 @@ def index(request):
     for element in order_and_suggestion_list:
         sort_order_and_suggestion_dict[element] = order_and_suggestion_dict[element]
     # Заказы
-    count = 0
-    count2 = 0
-    count3 = 0
-    count4 = 0
+
+    order_created = 0
+    order_discussion = 0
+    order_inwork = 0
+    order_done = 0
+    order_canceled = 0
     # Предложения
-    count5 = 0
-    count6 = 0
-    count7 = 0
-    count8 = 0
+    suggestion_created = 0
+    suggestion_discussion = 0
+    suggestion_inwork = 0
+    suggestion_done = 0
+    suggestion_canceled = 0
+
 
     for order in user_order:
-        count += 1
-        if order.status == 'In work':
-            count2 += 1
+        order_created += 1
+        if order.status == 'Discussion':
+            order_discussion += 1
+        elif order.status == 'InWork':
+            order_inwork += 1
         elif order.status == 'Done':
-            count3 += 1
-        elif order.status == 'In discussion':
-            count4 += 1
+            order_done += 1
+        elif order.status == 'Canceled':
+            order_canceled += 1
+        else:
+            print('ERROR ORDER')
 
     for sug in user_suggestion:
-        count5 += 1
-        if sug.status == 'In work':
-            count6 += 1
+        suggestion_created += 1
+        if sug.status == 'Discussion':
+            suggestion_discussion += 1
+        elif sug.status == 'InWork':
+            suggestion_inwork += 1
         elif sug.status == 'Done':
-            count7 += 1
-        elif sug.status == 'In discussion':
-            count8 += 1
+            suggestion_done += 1
+        elif sug.status == 'Canceled':
+            suggestion_canceled += 1
+        else:
+            print('ERROR SUGGESTION')
+
     context = {
         'sort_order_and_suggestion_dict': sort_order_and_suggestion_dict,
         'user_order': user_order,
@@ -77,34 +91,67 @@ def index(request):
         'suggestion_len': suggestion_len,
         'user_profile': user_profile,
         # Счетчики заказов
-        'user_order_count': count,
-        'user_order_count_in_work': count2,
-        'user_order_count_ready': count3,
-        'user_order_count_dis': count4,
+
+        'order_created': order_created,
+        'order_discussion': order_discussion,
+        'order_inwork': order_inwork,
+        'order_done': order_done,
+        'order_canceled': order_canceled,
         # Счетчики предложений
-        'user_suggestion_count': count5,
-        'user_suggestion_count_in_work': count6,
-        'user_suggestion_count_ready': count7,
-        'user_suggestion_count_dis': count8,
+        'suggestion_created': suggestion_created,
+        'suggestion_discussion': suggestion_discussion,
+        'suggestion_inwork': suggestion_inwork,
+        'suggestion_done': suggestion_done,
+        'suggestion_canceled': suggestion_canceled,
     }
     return render(request, 'dashboard/dashboard.html', context)
 
 
 def dashboard_order(request):
+
+    page_count = 6
+
+    categories = CODCategories.objects.all()
+    city = CODCity.objects.all()
+
     order = CODOrder.objects.filter(author=request.user)
+    Discussion_order = CODOrder.objects.filter(author=request.user, status='Discussion')
+    InWork_order = CODOrder.objects.filter(author=request.user, status='InWork')
+    Done_order = CODOrder.objects.filter(author=request.user, status='Done')
+    Canceled_order = CODOrder.objects.filter(author=request.user, status='Canceled')
 
-    paginator = Paginator(order, 10)
+    Discussion_order_f = OrdersFilter(request.GET, queryset=Discussion_order.order_by('-date_create'))
+    InWork_order_f = OrdersFilter(request.GET, queryset=InWork_order.order_by('-date_create'))
+    Done_order_f = OrdersFilter(request.GET, queryset=Done_order.order_by('-date_create'))
+    Canceled_order_f = OrdersFilter(request.GET, queryset=Canceled_order.order_by('-date_create'))
 
-    try:
-        page = int(request.GET.get('page', '1'))
-    except:
-        page = 1
-    try:
-        posts = paginator.page(page)
-    except(EmptyPage, InvalidPage):
-        posts = paginator.page(paginator.num_pages)
+    Discussion_order_paginator = Paginator(Discussion_order_f.qs, page_count)
+    InWork_order_paginator = Paginator(InWork_order_f.qs, page_count)
+    Done_order_paginator = Paginator(Done_order_f.qs, page_count)
+    Canceled_order_paginator = Paginator(Canceled_order_f.qs, page_count)
+
+    page_number = request.GET.get('page')
+
+    Discussion_order_obj = Discussion_order_paginator.get_page(page_number)
+    InWork_order_obj = InWork_order_paginator.get_page(page_number)
+    Done_order_obj = Done_order_paginator.get_page(page_number)
+    Canceled_order_obj = Canceled_order_paginator.get_page(page_number)
+
     context = {
         'orders': order,
+
+        'Discussion_order_obj': Discussion_order_obj,
+        'InWork_order_obj': InWork_order_obj,
+        'Done_order_obj': Done_order_obj,
+        'Canceled_order_obj': Canceled_order_obj,
+
+        'categories': categories,
+        'city': city,
+
+        'Discussion_order_f': Discussion_order_f,
+        'InWork_order_f': InWork_order_f,
+        'Done_order_f': Done_order_f,
+        'Canceled_order': Canceled_order,
     }
     return render(request, 'dashboard/dashboard-order.html', context)
 
@@ -151,9 +198,32 @@ def dashboard_order_ready(request):
 
 def dashboard_sug_active(request):
 
-    suggestions = CODSuggestion.objects.filter(author=request.user)
+    page_count = 3
 
+    suggestions = CODSuggestion.objects.filter(author=request.user)
     orders = CODOrder.objects.all()
+
+    Discussion_suggestions = CODSuggestion.objects.filter(author=request.user, status='Discussion')
+    InWork_suggestions = CODSuggestion.objects.filter(author=request.user, status='InWork')
+    Done_suggestions = CODSuggestion.objects.filter(author=request.user, status='Done')
+    Canceled_suggestions = CODSuggestion.objects.filter(author=request.user, status='Canceled')
+
+    Discussion_suggestions_f = OrdersFilter(request.GET, queryset=Discussion_suggestions.order_by('-date_create'))
+    InWork_suggestions_f = OrdersFilter(request.GET, queryset=InWork_suggestions.order_by('-date_create'))
+    Done_suggestions_f = OrdersFilter(request.GET, queryset=Done_suggestions.order_by('-date_create'))
+    Canceled_suggestions_f = OrdersFilter(request.GET, queryset=Canceled_suggestions.order_by('-date_create'))
+
+    Discussion_suggestions_paginator = Paginator(Discussion_suggestions_f.qs, page_count)
+    InWork_suggestions_paginator = Paginator(InWork_suggestions_f.qs, page_count)
+    Done_suggestions_paginator = Paginator(Done_suggestions_f.qs, page_count)
+    Canceled_suggestions_paginator = Paginator(Canceled_suggestions_f.qs, page_count)
+
+    page_number = request.GET.get('page')
+
+    Discussion_suggestions_obj = Discussion_suggestions_paginator.get_page(page_number)
+    InWork_suggestions_obj = InWork_suggestions_paginator.get_page(page_number)
+    Done_suggestions_obj = Done_suggestions_paginator.get_page(page_number)
+    Canceled_suggestions_obj = Canceled_suggestions_paginator.get_page(page_number)
 
     paginator = Paginator(suggestions, 3)
 
@@ -169,7 +239,12 @@ def dashboard_sug_active(request):
     context = {
         'suggestions': suggestions,
         'orders': orders,
-    }
+
+        'Discussion_suggestions_obj': Discussion_suggestions_obj,
+        'InWork_suggestions_obj': InWork_suggestions_obj,
+        'Done_suggestions_obj': Done_suggestions_obj,
+        'Canceled_suggestions_obj': Canceled_suggestions_obj,
+        }
     return render(request, 'dashboard/dashboard-sug-active.html', context)
 
 

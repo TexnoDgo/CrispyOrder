@@ -1,18 +1,13 @@
 from django.contrib import admin
 # -------------------------------------------------------OLD MODELS----------------------------------------------------
-from .models import Order, OperationCategories, Suggestion, AllCity, File, MassOrder
+from .models import File
 # -------------------------------------------------------OLD MODELS----------------------------------------------------
 # -------------------------------------------------------NEW MODELS----------------------------------------------------
 from .models import CODCity, CODMaterial, CODCategories, CODOrder, CODDetail, CODFile
 # -------------------------------------------------------NEW MODELS----------------------------------------------------
 
 # -------------------------------------------------------OLD MODELS----------------------------------------------------
-admin.site.register(Order)
-admin.site.register(OperationCategories)
-admin.site.register(Suggestion)
-admin.site.register(AllCity)
 admin.site.register(File)
-admin.site.register(MassOrder)
 # -------------------------------------------------------OLD MODELS----------------------------------------------------
 
 # -------------------------------------------------------NEW MODELS----------------------------------------------------

@@ -6,90 +6,125 @@
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'orders/add_multiple_detail.css' %}">
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{% trans "Create Order" %}</li>
-        <li class="breadcrumb-item active" aria-current="page">{% trans "Added detail" %}</li>
-    </ol>
-</nav>
-<div class="detailform ml-2 mr-3">
-    <div class="card">
-        <div class="card-header" align="center">{% trans "Order Details Description" %}</div>
-        <form class="text-left" method="POST" enctype="multipart/form-data">
-        <div class="overflow-auto" style="height: 44rem;">
-            <div class="row row-cols-1 row-cols-md-2 col">
-                {% csrf_token %}
-                {{ formset.management_form|crispy }}
-                {% for form in formset %}
-                {% if forloop.counter < formset|length %}
-                <div class="col mb-3">
-                    <div class="card bg-secondary">
-                        <!--<img src="{{detail.image_cover.url}}" class="card-img-top" alt="...">-->
-                        <ul class="list-group list-group-flush">
-                            <li class="list-group-item d-flex justify-content-between align-items-center list-group-item-secondary">
-                                {% trans "Detail name: " %}
-                                {{ form.name }}
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {% trans "Amount: " %}
-                                {{ form.amount }}
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {% trans "Material: " %}
-                                {{ form.material }}
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {% trans "Whose material: " %}
-                                {{ form.whose_material }}
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {% trans "Note: " %}
-                                {{ form.Note }}
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {% trans "Categories: " %}
-                                {{ form.Categories }}
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {% trans "Deadline: " %}
-                                {{ form.Deadline }}
-                            </li>
-                            <li class="list-group-item d-flex justify-content-between align-items-center">
-                                {% trans "Availability date: " %}
-                                {{ form.Availability_date }}
-                            </li>
-                        </ul>
-                    </div>
+
+<div class="block mb-3" style=" background:#FFFFFF;">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8 mt-3" align="center" style=" background:#FFFFF0;">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{% trans "Create Order" %}</li>
+                    <li class="breadcrumb-item active" aria-current="page">{% trans "Added detail" %}</li>
+                </ol>
+            </nav>
+            <div class="card mb-3">
+              <div class="row no-gutters">
+                <div class="col-md-4">
+                  <img src="{{ added_order.image_cover.url }}" class="card-img" alt="...">
                 </div>
-                {% endif %}
-                {% endfor %}
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">{{added_order.title}}</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {% trans "Order created: " %}
+                        <span class="badge badge-primary mr-2">{{added_order.date_create}}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {% trans "Order author: " %}
+                            <span class="badge badge-primary mr-2">{{added_order.author}}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {% trans "Order city: " %}
+                            <span class="badge badge-primary mr-2">{{added_order.city}}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {% trans "Order budget: " %}
+                            <span class="badge badge-primary mr-2">{{added_order.proposed_budget}}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {% trans "Order categories: " %}
+                            <div>
+                                {% for cat in added_order.Categories.all %}
+                                    <span class="badge badge-primary mr-2">{{ cat }}</span>
+                                {% endfor %}
+                            </div>
+                            
+                        </li>
+                    </ul>
+                    <h5 class="card-title mt-2">{{added_order.description}}</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+                <div class="card-header" align="center">{% trans "Order Details Description" %}</div>
+                <form class="text-left" method="POST" enctype="multipart/form-data">
+                    <div class="overflow-auto" style="height: 50rem;">
+                        <div class="row row-cols-1 row-cols-md-1 col">
+                            {% csrf_token %}
+                            {{ formset.management_form|crispy }}
+                            {% for form in formset.forms %}
+                                {% if forloop.counter < formset|length %}
+                                    <div class="card ml-3 mb-2 mt-2">
+                                        <ul class="list-group list-group-horizontal">
+                                            <li class="list-group-item list-group-item-info col-8">{{ form.name|as_crispy_field }}</li>
+                                            <li class="list-group-item list-group-item-info col-4">
+                                                <small>{% trans "Detail name." %}</small>
+                                            </li>
+                                        </ul>
+                                        <ul class="list-group list-group-horizontal">
+                                            <li class="list-group-item col-8">{{ form.amount|as_crispy_field }}</li>
+                                            <li class="list-group-item col-4">
+                                                <small>{% trans "Amount." %}</small>
+                                            </li>
+                                        </ul>
+                                        <ul class="list-group list-group-horizontal">
+                                            <li class="list-group-item col-8">{{ form.material|as_crispy_field }}</li>
+                                            <li class="list-group-item col-4">
+                                                <small>{% trans "Material." %}</small>
+                                            </li>
+                                        </ul>
+                                        <ul class="list-group list-group-horizontal">
+                                            <li class="list-group-item col-8">{{ form.whose_material|as_crispy_field }}</li>
+                                            <li class="list-group-item col-4">
+                                                <small>{% trans "Whose material." %}</small>
+                                            </li>
+                                        </ul>
+                                        <ul class="list-group list-group-horizontal">
+                                            <li class="list-group-item col-8">{{ form.Note|as_crispy_field }}</li>
+                                            <li class="list-group-item col-4">
+                                                <small>{% trans "Note." %}</small>
+                                            </li>
+                                        </ul>
+                                        <ul class="list-group list-group-horizontal">
+                                            <li class="list-group-item col-8">{{ form.Deadline|as_crispy_field }}</li>
+                                            <li class="list-group-item col-4">
+                                                <small>{% trans "Deadline." %}</small>
+                                            </li>
+                                        </ul>
+                                        <ul class="list-group list-group-horizontal">
+                                            <li class="list-group-item col-8">{{ form.Availability_date|as_crispy_field }}</li>
+                                            <li class="list-group-item col-4">
+                                                <small>{% trans "Availability date." %}</small>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="card-footer bg-transparent">
+                        <button class="btn btn-lg btn-outline-primary btn-block" type="submit">
+                            {% trans "CREATE" %}
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
-        <div class="card-footer bg-transparent">
-            <button class="btn btn-lg btn-outline-primary btn-block" type="submit">
-                {% trans "CREATE" %}
-            </button>
-        </div>
-    </form>
     </div>
 </div>
-<div class="order">
-    <div class="card">
-        <div class="card-header" align="center">{% trans "Order" %}</div>
-        <div class="card mb-3" style="height: 50rem;">
-            <img src="{{ added_order.image_cover.url }}" class="card-img-top" alt="...">
-            <div class="card-body">
-                <h5 class="card-title">{{added_order.title}}</h5>
-                <p class="card-text">{{added_order.description}}</p>
-                <p class="card-text">{{added_order.proposed_budget}}</p>
-                <p class="card-text">
-                    <small class="text-muted">{{added_order.city}}</small>
-                    <small class="text-muted">{{added_order.date_create}}</small>
-                </p>
-            </div>
-    </div>
-    </div>
-</div>
+
 {% endblock %}
 

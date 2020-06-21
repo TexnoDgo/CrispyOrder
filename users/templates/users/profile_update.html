@@ -5,64 +5,68 @@
 {% block title %}{% trans "Profile Update" %}{% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'users/style.css' %}">
 
 
-<div class="update">
-    <div class="card mb-3" style="width: 50rem;">
-        <form class="text-left" method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-            <div class="row no-gutters">
-                <div class="col-md-4">
-                    <img src="{{ profile_view.image.url }}" class="card-img" alt="...">
-                </div>
-                <div class="col-md-8">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ user.username }}{% trans " profile editing" %}</h5>
-                        <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
-                    </div>
-                    <ul class="list-group">
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {% trans "Login: " %}
-                            {{ u_form.username }}
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {% trans "Email: " %}
-                            {{ u_form.email }}
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {% trans "Image: " %}
-                            <small>{{ p_form.image }}</small>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {% trans "Name: " %}
-                            <span class="badge badge-primary badge-pill">1</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {% trans "Surname: " %}
-                            <span class="badge badge-primary badge-pill">1</span>
-                        </li>
-                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                            {% trans "Phone: " %}
-                            <span class="badge badge-primary badge-pill">1</span>
-                        </li>
-                    </ul>
+<div class="block col mb-4">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8 mt-3" align="center">
+            <div class="update">
+                <div class="card mb-3" style="width: 50rem;">
+                    <form class="text-left" method="POST" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <div class="row no-gutters">
+                            <div class="col-md-4">
+                                <img src="{{ profile_view.image.url }}" class="card-img" alt="...">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <h5 class="card-title">{{ user.username }}{% trans " profile editing" %}</h5>
+                                    <p class="card-text">This is a wider card with supporting text below as a natural lead-in to additional content. This content is a little bit longer.</p>
+                                </div>
+                                <ul class="list-group">
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {% trans "Email: " %}
+                                        {{ u_form.email }}
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {% trans "Image: " %}
+                                        <small>{{ p_form.image }}</small>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {% trans "Name: " %}
+                                        <span class="badge badge-primary badge-pill">1</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {% trans "Surname: " %}
+                                        <span class="badge badge-primary badge-pill">1</span>
+                                    </li>
+                                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                                        {% trans "Phone: " %}
+                                        <span class="badge badge-primary badge-pill">1</span>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-transparents">
+                            <div class="list-group list-group-horizontal" align="center">
+                                <button type="submit"
+                                   class="list-group-item list-group-item-action list-group-item-success col">
+                                    {% trans "Update" %}
+                                </button>
+                                <button type="reset"
+                                   class="list-group-item list-group-item-action list-group-item-light col">
+                                    {% trans "Cancel" %}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
-            <div class="card-footer bg-transparents">
-                <div class="list-group list-group-horizontal" align="center">
-                    <button type="submit"
-                       class="list-group-item list-group-item-action list-group-item-success col">
-                        {% trans "Update" %}
-                    </button>
-                    <button type="reset"
-                       class="list-group-item list-group-item-action list-group-item-light col">
-                        {% trans "Cancel" %}
-                    </button>
-                </div>
-            </div>
-        </form>
+        </div>
     </div>
 </div>
+
+
 {% endblock %}
 

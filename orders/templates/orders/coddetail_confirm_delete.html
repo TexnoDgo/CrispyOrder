@@ -1,0 +1,42 @@
+{% extends "HomePage/base.html" %}
+{% load i18n %}
+{% block title %}{% trans "DELETE DETAIL - " %} № {{ detail.id }}{% endblock %}
+{% load static %}
+
+{% block content %}
+    <link rel="stylesheet" href="{% static 'orders/order_style.css' %}">
+    
+    
+    <div class="block col mb-4" style=" background:#FFFFFF;">
+      <div class="row">
+          <div class="col-sm-2"></div>
+          <div class="col-sm-8 mt-3" align="center" style=" background:#FFFFF0;">
+            <nav aria-label="breadcrumb">
+              <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "HOME" %}</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'all_cod_order_view' %}">{% trans "ALL ORDERS" %}</a></li>
+                <li class="breadcrumb-item"><a href="{% url 'order_and_suggestion_view' url=detail_order.id %}">{% trans "ORDER №" %}{{detail_order.id}} "{{detail_order.title}}"</a></li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans "DETAIL №" %}{{coddetail.id}} "{{coddetail.name}}"</li>
+                <li class="breadcrumb-item active" aria-current="page">{% trans "DELETE ORDER" %}</li>
+              </ol>
+            </nav>
+            <div class="jumbotron">
+                <h1 class="display-4">{% trans "DELETE DETAIL" %} - "{{ coddetail.name }}"</h1>
+                <p class="lead">{% trans "Are you sure you want to delete the detail?" %}.</p>
+                <hr class="my-4">
+                <form class="group-form" method="post">
+                    {% csrf_token %}
+                     <p class="lead">
+                         <button class="btn btn-outline-danger btn-lg" type="submit">{% trans "YES, DELETE!" %}</button>
+                         <a class="btn btn-outline-secondary btn-lg" href="{% url 'order_and_suggestion_view' url=object.id %}" role="button">{% trans "CENCEL" %}</a>
+                     </p>
+                </form>
+            </div>
+          </div>
+      </div>
+    </div>
+
+    <div class="vso">
+        
+    </div>
+{% endblock %}

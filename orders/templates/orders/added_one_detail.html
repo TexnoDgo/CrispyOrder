@@ -5,115 +5,184 @@
 {% block title %}{% trans "CrispyMachine - Create Order" %}{% endblock %}
 {% block content %}
 <link rel="stylesheet" href="{% static 'orders/create_single_order.css' %}">
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
-        <li class="breadcrumb-item active" aria-current="page">{% trans "Create Order" %}</li>
-        <li class="breadcrumb-item active" aria-current="page">{% trans "Added detail" %}</li>
-    </ol>
-</nav>
-<div class="container">
-    <h1 class="display-5" align="center">{% trans "Order" %}</h1>
-    <hr>
-    <div class="card mb-3">
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/js/tempusdominus-bootstrap-4.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tempusdominus-bootstrap-4/5.0.1/css/tempusdominus-bootstrap-4.min.css" />
 
-      <img src="{{ added_order.image_cover.url }}" class="card-img-top" alt="...">
-      <div class="card-body">
-        <h5 class="card-title">{{added_order.title}}</h5>
-        <p class="card-text">{{added_order.description}}</p>
-        <p class="card-text">{{added_order.proposed_budget}}</p>
-        <p class="card-text">
-            <small class="text-muted">{{added_order.city}}</small>
-            <small class="text-muted">{{added_order.date_create}}</small>
-        </p>
-      </div>
+
+<div class="block" style=" background:#FFFFFF;">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8 mt-3" align="center" style=" background:#FFFFF0;">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
+                    <li class="breadcrumb-item active" aria-current="page">{% trans "Create Order" %}</li>
+                    <li class="breadcrumb-item active" aria-current="page">{% trans "Added detail" %}</li>
+                </ol>
+            </nav>
+            <div class="card mb-3">
+              <div class="row no-gutters">
+                <div class="col-md-4">
+                  <img src="{{ added_order.image_cover.url }}" class="card-img" alt="...">
+                </div>
+                <div class="col-md-8">
+                  <div class="card-body">
+                    <h5 class="card-title">{{added_order.title}}</h5>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                        {% trans "Order created: " %}
+                        <span class="badge badge-primary mr-2">{{added_order.date_create}}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {% trans "Order author: " %}
+                            <span class="badge badge-primary mr-2">{{added_order.author}}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {% trans "Order city: " %}
+                            <span class="badge badge-primary mr-2">{{added_order.city}}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {% trans "Order budget: " %}
+                            <span class="badge badge-primary mr-2">{{added_order.proposed_budget}}</span>
+                        </li>
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            {% trans "Order categories: " %}
+                            <div>
+                                {% for cat in added_order.Categories.all %}
+                                    <span class="badge badge-primary mr-2">{{ cat }}</span>
+                                {% endfor %}
+                            </div>
+                            
+                        </li>
+                    </ul>
+                    <h5 class="card-title mt-2">{{added_order.description}}</h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <form class="text-left" method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item col-8">{{ form.amount|as_crispy_field }}</li>
+                    <li class="list-group-item col-4">
+                        <small>{% trans "Indicate the number of products to be manufactured." %}</small>
+                    </li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item col-8">{{ form.material|as_crispy_field }}</li>
+                    <li class="list-group-item col-4">
+                         <small>{% trans "Select material to make the part." %}</small>
+                    </li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item col-8">{{ form.whose_material|as_crispy_field }}</li>
+                    <li class="list-group-item col-4">
+                         <small>{% trans "Indicate whose material will be used to manufacture this part." %}</small>
+                    </li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item col-8" >{{ form.Note|as_crispy_field }}</li>
+                    <li class="list-group-item col-4">
+                          <small>{% trans "Describe the specifics of the part." %}</small>
+                    </li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item col-8">
+                        
+                            <div class="input-group date" id="datetimepicker1" data-target-input="nearest">
+                                <input type="text" class="form-control datetimepicker-input" data-target="#datetimepicker1"/ id="{{ form.Deadline }}
+                                <div class="input-group-append" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                                    <div class="input-group-text">
+                                        <i>
+                                            <svg class="bi bi-calendar3" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                              <path fill-rule="evenodd" d="M14 0H2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2zM1 3.857C1 3.384 1.448 3 2 3h12c.552 0 1 .384 1 .857v10.286c0 .473-.448.857-1 .857H2c-.552 0-1-.384-1-.857V3.857z"/>
+                                              <path fill-rule="evenodd" d="M6.5 7a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm3 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                            </svg>
+                                        </i>
+                                    </div>
+                                </div>
+                            </div>
+                        <script type="text/javascript">
+                            $(function () {
+                                $('#datetimepicker1').datetimepicker({
+                                    format: 'YYYY-MM-DD'
+                                });
+                            });
+                        </script>
+                    </li>
+                    <li class="list-group-item col-4">
+                        <small>
+                            {% trans "Set deadlines.Indicate the deadline in the format 'YYYY-MM-DD'. For example 2020-02-20" %}
+                        </small>
+                    </li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item col-8">
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="{{ form.pdf }}
+                          <label class="custom-file-label" for="{{ form.pdf }}Choose PDF file</label>
+                        </div>
+                    </li>
+                    <li class="list-group-item col-4">
+                        <small>
+                            {% trans "Add 'PDF' file." %}
+                        </small>
+                    </li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item col-8">
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="{{ form.dxf }}
+                          <label class="custom-file-label" for="{{ form.dxf }}Choose DXF file</label>
+                        </div>
+                    </li>
+                    <li class="list-group-item col-4">
+                        <small>
+                            {% trans "Add 'DXF' file." %}
+                        </small>
+                    </li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item col-8">
+                        
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="{{ form.step }}
+                          <label class="custom-file-label" for="{{ form.step }}Choose STEP file</label>
+                        </div>
+                    </li>
+                    <li class="list-group-item col-4">
+                        <small>
+                            {% trans "Add 'STEP' file." %}
+                        </small>
+                    </li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item col-8">
+                        
+                        <div class="custom-file">
+                          <input type="file" class="custom-file-input" id="{{ form.part }}
+                          <label class="custom-file-label" for="{{ form.part }}Choose PART file</label>
+                        </div>
+                    </li>
+                    <li class="list-group-item col-4">
+                        <small>
+                            {% trans "Add 'PART' file." %}
+                        </small>
+                    </li>
+                </ul>
+                <hr>
+                <button class="btn btn-lg btn-outline-primary btn-block" type="submit">
+                    {% trans "CREATE" %}
+                </button>
+                <hr>
+            </form>
+        </div>
+        <div class="col-sm-2"></div>
     </div>
 </div>
-<div class="container mb-4">
-    <h1 class="display-5" align="center">{% trans "Order Details Description" %}</h1>
-    <hr>
-    <form class="text-left" method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8">{{ form.amount|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                <small>{% trans "Indicate the number of products to be manufactured." %}</small>
-            </li>
-        </ul>
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8">{{ form.material|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                 <small>{% trans "Select material to make the part." %}</small>
-            </li>
-        </ul>
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8">{{ form.whose_material|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                 <small>{% trans "Indicate whose material will be used to manufacture this part." %}</small>
-            </li>
-        </ul>
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8" >{{ form.Note|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                  <small>{% trans "Describe the specifics of the part." %}</small>
-            </li>
-        </ul>
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8">{{ form.Categories|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                <small>
-                    {% trans "Select the categories to which your order falls." %}
-                    {% trans "You can select several categories." %}
-                    {% trans "To do this, click on them in turn holding the 'Ctrl' button." %}
-                </small>
-            </li>
-        </ul>
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8">{{ form.Deadline|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                <small>
-                    {% trans "Set deadlines.Indicate the deadline in the format 'YYYY-MM-DD'. For example 2020-02-20" %}
-                </small>
-            </li>
-        </ul>
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8">{{ form.pdf|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                <small>
-                    {% trans "Add 'PDF' file." %}
-                </small>
-            </li>
-        </ul>
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8">{{ form.dxf|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                <small>
-                    {% trans "Add 'DXF' file." %}
-                </small>
-            </li>
-        </ul>
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8">{{ form.step|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                <small>
-                    {% trans "Add 'STEP' file." %}
-                </small>
-            </li>
-        </ul>
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8">{{ form.part|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                <small>
-                    {% trans "Add 'PART' file." %}
-                </small>
-            </li>
-        </ul>
-        <hr>
-        <button class="btn btn-lg btn-outline-primary btn-block" type="submit">
-            {% trans "CREATE" %}
-        </button>
-        <hr>
-    </form>
-</div>
+
+
+
 {% endblock %}
 

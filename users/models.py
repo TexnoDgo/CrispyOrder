@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 from django.utils.translation import ugettext_lazy as _
 
-from orders.models import Suggestion, OperationCategories
+from orders.models import CODCategories, CODCity
 
 
 class UserStripe(models.Model):
@@ -29,6 +29,10 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.PROTECT)
     image = models.ImageField(default='default.jpg', upload_to='profile_pics')
     rating = models.PositiveIntegerField(default=0)
+    name = models.CharField(max_length=50, null=True, default='name', blank=True)
+    surname = models.CharField(max_length=50, null=True, default='surname', blank=True)
+    phone = models.CharField(max_length=50, null=True, default='phone', blank=True)
+    city = models.ForeignKey(CODCity, on_delete=models.CASCADE)
 
     # ----------------------------------------Уведомления------------------------------------------------
     # Получать уведомления о новых заказа в категории?
@@ -49,7 +53,7 @@ class Profile(models.Model):
     timing = models.CharField(max_length=30, choices=TIMING_CHOICE, default=_('Never'),
                               verbose_name=_('Update frequency'))
     # Категории уведомления
-    categories = models.ManyToManyField(OperationCategories, blank=True, related_name='profile',
+    categories = models.ManyToManyField(CODCategories, blank=True, related_name='profile',
                                         verbose_name=_('Categories for notifications'))
     # -------------------------------------------Уведомления----------------------------------------------
 

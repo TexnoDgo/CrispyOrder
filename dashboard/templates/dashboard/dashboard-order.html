@@ -1,182 +1,245 @@
 {% extends "HomePage/base.html" %}
 {% load i18n %}
-{% block title %}{% trans "Dashboard Order" %}{% endblock %}
+{% block title %}{% trans "CO | MY ORDERS" %}{% endblock %}
 {% load static %}
 {% load bootstrap_pagination %}
 
 {% block content %}
 
+<div class="block col mb-4">
+  <div class="row">
+      <div class="col-sm-2"></div>
+      <div class="col-sm-8 mt-3" align="center" style=" background:#FFFFF0;">
+        <nav aria-label="breadcrumb">
+          <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "HOME" %}</a></li>
+              <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "DASHBOARD" %} - "{{user.username}}"</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{% trans "MY ORDERS" %}</li>
+          </ol>
+        </nav>
+        <div class="col mt-2">
+          <nav >
+            <div class="nav nav-tabs ml-2 mr-2" id="nav-tab" role="tablist" align="center">
+                <a class="nav-item nav-link active col" id="nav-discussion-tab" data-toggle="tab"
+                   href="#nav-discussion" role="tab" aria-controls="nav-discussion" aria-selected="true">
+                    {% trans "Discussion Orders" %}
+                </a>
+                <a class="nav-item nav-link col" id="nav-work-tab" data-toggle="tab"
+                   href="#nav-work" role="tab" aria-controls="nav-work" aria-selected="false">
+                    {% trans "Work orders" %}
+                </a>
+                <a class="nav-item nav-link col" id="nav-fulfilled-tab" data-toggle="tab"
+                   href="#nav-fulfilled" role="tab" aria-controls="nav-fulfilled" aria-selected="false">
+                    {% trans "Orders Fulfilled" %}
+                </a>
+                <a class="nav-item nav-link col" id="nav-canceled-tab" data-toggle="tab"
+                   href="#nav-canceled" role="tab" aria-controls="nav-canceled" aria-selected="false">
+                    {% trans "Canceled Orders" %}
+                </a>
+                <a class="nav-item nav-link col" id="nav-selected-tab" data-toggle="tab"
+                   href="#nav-selected" role="tab" aria-controls="nav-selected" aria-selected="false">
+                    {% trans "Selected Orders" %}
+                </a>
+            </div>
+          </nav>
+          <div class="card ml-2 mr-2" style="min-height: 30rem;">
+              <div class="tab-content" id="nav-tabContent" style="background:#FFFFF0; min-height: 30rem;">
+                  <div class="tab-pane fade show active" id="nav-discussion" role="tabpanel" aria-labelledby="nav-discussion-tab">
+                      {% if Discussion_order_obj %}
+                          <div class="row row-cols-1 row-cols-md-3 mt-2" >
+                              {% for obj in Discussion_order_obj %}
+                                <div class="col mb-3">
+                                  <div class="card border-dark">
+                                    <img class="card-img-top" src="{{obj.image_cover.url }}" width="200" height="auto">
+                                    <div class="card-body">
+                                      <h5 class="card-title">{{ obj.title }}</h5>
+                                      <p class="card-text">{{ obj.description }}</p>
+                                    </div>
+                                    <div class="card-footer bg-transparent border-dark">
+                                      <a class="btn btn-outline-dark col"
+                                         href="{% url 'order_and_suggestion_view' url=obj.pk %}">
+                                          {% trans "Details" %} 
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              {% endfor %}
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-9" align="center">
+                            </div>
+                            <div class="col-sm-3">
+                              <div class="pagination mt-4 mb-4">
+                                {% bootstrap_paginate Discussion_order_obj range=6 %}
+                              </div>
+                            </div>
+                          </div>
+                      {% else %}
+                          <div class="row" style="width: 100%;">
+                            <div class="col mb-4"  align="center">
+                                <small>
+                                    {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
+                                    <a href="{% url 'create_single_order' %}">{% trans "create single order" %}</a>
+                                    {% trans " or" %}
+                                    <a href="{% url 'create_multiple_order' %}">{% trans "create multiple order" %}</a>
+                                </small>
+                            </div>
+                          </div>
+                      {% endif %}
+                  </div>
 
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
-      <li class="breadcrumb-item"><a href="{% url 'dashboard' %}">{% trans "Dashboard" %}</a></li>
-    <li class="breadcrumb-item active" aria-current="page">{% trans "You Orders" %}</li>
-  </ol>
-</nav>
-<nav>
-    <div class="nav nav-tabs ml-2 mr-2" id="nav-tab" role="tablist" align="center">
-        <a class="nav-item nav-link active col" id="nav-discussion-tab" data-toggle="tab"
-           href="#nav-discussion" role="tab" aria-controls="nav-discussion" aria-selected="true">
-            {% trans "Discussion Orders" %}
-        </a>
-        <a class="nav-item nav-link col" id="nav-work-tab" data-toggle="tab"
-           href="#nav-work" role="tab" aria-controls="nav-work" aria-selected="false">
-            {% trans "Work orders" %}
-        </a>
-        <a class="nav-item nav-link col" id="nav-fulfilled-tab" data-toggle="tab"
-           href="#nav-fulfilled" role="tab" aria-controls="nav-fulfilled" aria-selected="false">
-            {% trans "Orders Fulfilled" %}
-        </a>
-        <a class="nav-item nav-link col" id="nav-canceled-tab" data-toggle="tab"
-           href="#nav-canceled" role="tab" aria-controls="nav-canceled" aria-selected="false">
-            {% trans "Canceled Orders" %}
-        </a>
-        <a class="nav-item nav-link col" id="nav-selected-tab" data-toggle="tab"
-           href="#nav-selected" role="tab" aria-controls="nav-selected" aria-selected="false">
-            {% trans "Selected Orders" %}
-        </a>
-    </div>
-</nav>
-<div class="card ml-2 mr-2" style="height: 47rem;">
-    <div class="tab-content" id="nav-tabContent">
-        <div class="tab-pane fade show active" id="nav-discussion" role="tabpanel" aria-labelledby="nav-discussion-tab">
-            {% if orders %}
-                <div class="row row-cols-1 row-cols-md-5 mt-2">
-                    {% for order in orders %}
-                        {% if order.status == 'Discussion' %}
-                          <div class="col mb-4">
-                            <div class="card border-light">
-                              <img class="card-img-top" src="{{order.image_cover.url }}" width="300" height="auto">
-                              <div class="card-body">
-                                <h5 class="card-title">{{ order.title }}</h5>
-                                <p class="card-text">{{ order.description }}</p>
+                  <div class="tab-pane fade" id="nav-work" role="tabpanel" aria-labelledby="nav-work-tab">
+                      {% if InWork_order_obj %}
+                        <div class="row row-cols-1 row-cols-md-3 mt-2">
+                              {% for obj in InWork_order_obj %}
+                                <div class="col mb-3">
+                                  <div class="card border-dark">
+                                    <img class="card-img-top" src="{{obj.image_cover.url }}" width="200" height="auto">
+                                    <div class="card-body">
+                                      <h5 class="card-title">{{ obj.title }}</h5>
+                                      <p class="card-text">{{ obj.description }}</p>
+                                    </div>
+                                    <div class="card-footer bg-transparent border-dark">
+                                      <a class="btn btn-outline-dark col"
+                                         href="{% url 'order_and_suggestion_view' url=obj.pk %}">
+                                          {% trans "Details" %} 
+                                      </a>
+                                    </div>
+                                  </div>
+                                </div>
+                              {% endfor %}
+                            </div>
+                            <div class="row">
+                              <div class="col-sm-9" align="center">
                               </div>
-                              <div class="card-footer bg-transparent border-light">
-                                  <a class="btn btn-outline-success col-12" href="{% url 'order_and_suggestion_view' url=order.id %}">{% trans "Details" %}</a>
+                              <div class="col-sm-3">
+                                <div class="pagination mt-4 mb-4">
+                                  {% bootstrap_paginate InWork_order_obj range=6 %}
+                                </div>
+                              </div>
+                            </div>
+                      {% else %}
+                          <div class="row" style="width: 100%;">
+                            <div class="col mb-4"  align="center">
+                                <small>
+                                    {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
+                                    <a href="{% url 'create_single_order' %}">{% trans "create single order" %}</a>
+                                    {% trans " or" %}
+                                    <a href="{% url 'create_multiple_order' %}">{% trans "create multiple order" %}</a>
+                                </small>
+                            </div>
+                          </div>
+                      {% endif %}
+                  </div>
+
+                  <div class="tab-pane fade" id="nav-fulfilled" role="tabpanel" aria-labelledby="nav-fulfilled-tab">
+                      {% if Done_order_obj %}
+                          <div class="row row-cols-1 row-cols-md-3 mt-2">
+                            {% for obj in Done_order_obj %}
+                              <div class="col mb-3">
+                                <div class="card border-dark">
+                                  <img class="card-img-top" src="{{obj.image_cover.url }}" width="200" height="auto">
+                                  <div class="card-body">
+                                    <h5 class="card-title">{{ obj.title }}</h5>
+                                    <p class="card-text">{{ obj.description }}</p>
+                                  </div>
+                                  <div class="card-footer bg-transparent border-dark">
+                                    <a class="btn btn-outline-dark col"
+                                       href="{% url 'order_and_suggestion_view' url=obj.pk %}">
+                                        {% trans "Details" %} 
+                                    </a>
+                                  </div>
+                                </div>
+                              </div>
+                            {% endfor %}
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-9" align="center">
+                            </div>
+                            <div class="col-sm-3">
+                              <div class="pagination mt-4 mb-4">
+                                {% bootstrap_paginate Done_order_obj range=6 %}
                               </div>
                             </div>
                           </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="row " style="width: 100%;">
-                <div class="col mb-4"  align="center">
-                    <small>
-                        {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
-                        <a href="{% url 'order_create' %}">{% trans "here." %}</a>
-                    </small>
-                </div>
-            </div>
-            {% endif %}
-        </div>
-        <div class="tab-pane fade" id="nav-work" role="tabpanel" aria-labelledby="nav-work-tab">
-            {% if orders %}
-                <div class="row row-cols-1 row-cols-md-5 mt-2">
-                    {% for order in orders %}
-                        {% if order.status == 'InWork' %}
-                          <div class="col mb-4">
-                            <div class="card border-light">
-                              <img class="card-img-top" src="{{order.image_cover.url }}" width="300" height="auto">
-                              <div class="card-body">
-                                <h5 class="card-title">{{ order.title }}</h5>
-                                <p class="card-text">{{ order.description }}</p>
+                      {% else %}
+                          <div class="row " style="width: 100%;">
+                          <div class="col mb-4"  align="center">
+                              <small>
+                                  {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
+                                  <a href="{% url 'create_single_order' %}">{% trans "create single order" %}</a>
+                                  {% trans " or" %}
+                                  <a href="{% url 'create_multiple_order' %}">{% trans "create multiple order" %}</a>
+                              </small>
+                          </div>
+                      </div>
+                      {% endif %}
+                  </div>
+
+                  <div class="tab-pane fade" id="nav-canceled" role="tabpanel" aria-labelledby="nav-canceled-tab">
+                      {% if Canceled_order_obj %}
+                          <div class="row row-cols-1 row-cols-md-3 mt-2">
+                            {% for obj in Canceled_order_obj %}
+                              <div class="col mb-3">
+                                <div class="card border-dark">
+                                  <img class="card-img-top" src="{{obj.image_cover.url }}" width="200" height="auto">
+                                  <div class="card-body">
+                                    <h5 class="card-title">{{ obj.title }}</h5>
+                                    <p class="card-text">{{ obj.description }}</p>
+                                  </div>
+                                  <div class="card-footer bg-transparent border-dark">
+                                    <a class="btn btn-outline-dark col"
+                                       href="{% url 'order_and_suggestion_view' url=obj.pk %}">
+                                        {% trans "Details" %} 
+                                    </a>
+                                  </div>
+                                </div>
                               </div>
-                              <div class="card-footer bg-transparent border-light">
-                                  <a class="btn btn-outline-success col-12" href="{% url 'order_and_suggestion_view' url=order.id %}">{% trans "Details" %}</a>
+                            {% endfor %}
+                          </div>
+                          <div class="row">
+                            <div class="col-sm-9" align="center">
+                            </div>
+                            <div class="col-sm-3">
+                              <div class="pagination mt-4 mb-4">
+                                {% bootstrap_paginate Canceled_order_obj range=6 %}
                               </div>
                             </div>
                           </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="row " style="width: 100%;">
-                <div class="col mb-4"  align="center">
-                    <small>
-                        {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
-                        <a href="{% url 'order_create' %}">{% trans "here." %}</a>
-                    </small>
-                </div>
-            </div>
-            {% endif %}
-        </div>
-        <div class="tab-pane fade" id="nav-fulfilled" role="tabpanel" aria-labelledby="nav-fulfilled-tab">
-            {% if orders %}
-                <div class="row row-cols-1 row-cols-md-5 mt-2">
-                    {% for order in orders %}
-                        {% if order.status == 'Done' %}
-                          <div class="col mb-4">
-                            <div class="card border-light">
-                              <img class="card-img-top" src="{{order.image_cover.url }}" width="300" height="auto">
-                              <div class="card-body">
-                                <h5 class="card-title">{{ order.title }}</h5>
-                                <p class="card-text">{{ order.description }}</p>
-                              </div>
-                              <div class="card-footer bg-transparent border-light">
-                                  <a class="btn btn-outline-success col-12" href="{% url 'order_and_suggestion_view' url=order.id %}">{% trans "Details" %}</a>
-                              </div>
-                            </div>
+                      {% else %}
+                          <div class="row " style="width: 100%;">
+                          <div class="col mb-4"  align="center">
+                              <small>
+                                  {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
+                                  <a href="{% url 'create_single_order' %}">{% trans "create single order" %}</a>
+                                  {% trans " or" %}
+                                  <a href="{% url 'create_multiple_order' %}">{% trans "create multiple order" %}</a>
+                              </small>
                           </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="row " style="width: 100%;">
-                <div class="col mb-4"  align="center">
-                    <small>
-                        {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
-                        <a href="{% url 'order_create' %}">{% trans "here." %}</a>
-                    </small>
-                </div>
-            </div>
-            {% endif %}
-        </div>
-        <div class="tab-pane fade" id="nav-canceled" role="tabpanel" aria-labelledby="nav-canceled-tab">
-            {% if orders %}
-                <div class="row row-cols-1 row-cols-md-5 mt-2">
-                    {% for order in orders %}
-                        {% if order.status == 'Canceled' %}
-                          <div class="col mb-4">
-                            <div class="card border-light">
-                              <img class="card-img-top" src="{{order.image_cover.url }}" width="300" height="auto">
-                              <div class="card-body">
-                                <h5 class="card-title">{{ order.title }}</h5>
-                                <p class="card-text">{{ order.description }}</p>
-                              </div>
-                              <div class="card-footer bg-transparent border-light">
-                                  <a class="btn btn-outline-success col-12" href="{% url 'order_and_suggestion_view' url=order.id %}">{% trans "Details" %}</a>
-                              </div>
-                            </div>
+                      </div>
+                      {% endif %}
+                  </div>
+
+                  <div class="tab-pane fade" id="nav-selected" role="tabpanel" aria-labelledby="nav-selected-tab">
+                      {% if orders %}
+                      {% else %}
+                      <div class="row " style="width: 100%;">
+                          <div class="col mb-4"  align="center">
+                              <small>
+                                  {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
+                                  <a href="{% url 'create_single_order' %}">{% trans "create single order" %}</a>
+                                  {% trans " or" %}
+                                  <a href="{% url 'create_multiple_order' %}">{% trans "create multiple order" %}</a>
+                              </small>
                           </div>
-                        {% endif %}
-                    {% endfor %}
-                </div>
-            {% else %}
-                <div class="row " style="width: 100%;">
-                <div class="col mb-4"  align="center">
-                    <small>
-                        {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
-                        <a href="{% url 'order_create' %}">{% trans "here." %}</a>
-                    </small>
-                </div>
-            </div>
-            {% endif %}
+                      </div>
+                      {% endif %}
+                  </div>
+
+              </div>
+          </div>
         </div>
-        <div class="tab-pane fade" id="nav-selected" role="tabpanel" aria-labelledby="nav-selected-tab">
-            {% if orders %}
-            {% else %}
-            <div class="row " style="width: 100%;">
-                <div class="col mb-4"  align="center">
-                    <small>
-                        {% trans "Welcome, unfortunately you do not have orders yet. To create an order, click here." %}
-                        <a href="{% url 'order_create' %}">{% trans "here." %}</a>
-                    </small>
-                </div>
-            </div>
-            {% endif %}
-        </div>
-    </div>
-</div>
+      </div>
+  </div>
+</div>  
 {% endblock %}

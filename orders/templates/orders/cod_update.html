@@ -2,75 +2,78 @@
 {% load i18n %}
 {% load crispy_forms_tags %}
 {% load static %}
-{% block title %}{% trans "CrispyOrder|Update Order" %}{% endblock %}
+{% block title %}{% trans "CM|UPDATE ORDER" %}{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'orders/create_single_order.css' %}">
-<nav aria-label="breadcrumb">
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "Home" %}</a></li>
-        <li class="breadcrumb-item">
-            <a href="{% url 'index' %}">{% trans "Order: " %}{{ codorder.title }}</a>
-        </li>
-        <li class="breadcrumb-item active" aria-current="page">{% trans "Update Order" %}</li>
-    </ol>
-</nav>
-
-<div class="container">
-    <h1 class="display-5" align="center">{% trans "Update order" %}</h1>
-    <p class="lead ml-5">
-        {% trans "Below is the order creation form, fill it out, read the tips and tricks carefully. For more detailed instructions on creating orders, click here" %}
-        <a href="#">{% trans "read more." %}</a>
-    </p>
-    <form class="text-left" method="post" enctype="multipart/form-data">
-        {% csrf_token %}
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8">{{ form.title|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                <small>
-                    {% trans "Enter the order header. For example: 'Make a turning part'," %}
-                    {% trans "'Perform a turning', 'Perform a welding of a structure'." %}
-                </small>
-            </li>
-        </ul>
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8">{{ form.description|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                <small>
-                    {% trans "Describe in detail the work that needs to be done." %}
-                    {% trans "Specify special requirements, if necessary, describe the technical process." %}
-                </small>
-            </li>
-        </ul>
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8">{{ form.pdf_cover|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                <small>{% trans "Select an order cover. It is recommended to use a drawing made to be made," %}
-                    {% trans "so that the performers could immediately evaluate the area of work. Download the drawing" %}
-                    {% trans "in PDF format." %}
-                </small>
-            </li>
-        </ul>
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8">{{ form.city|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                <small>{% trans "Select the city where the order will be sent." %}</small>
-            </li>
-        </ul>
-        <ul class="list-group list-group-horizontal">
-            <li class="list-group-item col-8">{{ form.proposed_budget|as_crispy_field }}</li>
-            <li class="list-group-item col-4">
-                <small>{% trans "Indicate estimated budget." %}</small>
-            </li>
-        </ul>
-        <hr>
-        <button class="btn btn-lg btn-outline-success btn-block" type="submit">
-            {% trans "UPDATE" %}
-        </button>
-    </form>
-    <hr>
+<div class="block" style=" background:#FFFFFF;">
+    <div class="row">
+        <div class="col-sm-2"></div>
+        <div class="col-sm-8 mt-3" align="center" style=" background:#FFFFF0;">
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="{% url 'index' %}">{% trans "HOME" %}</a></li>
+                    <li class="breadcrumb-item">
+                        <a href="{% url 'index' %}">{% trans "ORDER №" %}{{ codorder.id }}: "{{ codorder.title }}"</a>
+                    </li>
+                    <li class="breadcrumb-item active" aria-current="page">{% trans "UPDATE ORDER" %}</li>
+                </ol>
+            </nav>
+            <h1 class="display-5" align="center">{% trans "UPDATE ORDER - " %}"{{ codorder.title }}"</h1>
+            <p class="lead ml-5">
+                {% trans "Below is the order creation form, fill it out, read the tips and tricks carefully. For more detailed instructions on creating orders, click here" %}
+                <a href="#">{% trans "read more." %}</a>
+            </p>
+            <form class="text-left" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item col-8">{{ form.title|as_crispy_field }}</li>
+                    <li class="list-group-item col-4">
+                        <small>
+                            {% trans "Enter the order header. For example: 'Make a turning part'," %}
+                            {% trans "'Perform a turning', 'Perform a welding of a structure'." %}
+                        </small>
+                    </li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item col-8">{{ form.description|as_crispy_field }}</li>
+                    <li class="list-group-item col-4">
+                        <small>
+                            {% trans "Describe in detail the work that needs to be done." %}
+                            {% trans "Specify special requirements, if necessary, describe the technical process." %}
+                        </small>
+                    </li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item col-8">{{ form.pdf_cover|as_crispy_field }}</li>
+                    <li class="list-group-item col-4">
+                        <small>{% trans "Select an order cover. It is recommended to use a drawing made to be made," %}
+                            {% trans "so that the performers could immediately evaluate the area of work. Download the drawing" %}
+                            {% trans "in PDF format." %}
+                        </small>
+                    </li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item col-8">{{ form.city|as_crispy_field }}</li>
+                    <li class="list-group-item col-4">
+                        <small>{% trans "Select the city where the order will be sent." %}</small>
+                    </li>
+                </ul>
+                <ul class="list-group list-group-horizontal">
+                    <li class="list-group-item col-8">{{ form.proposed_budget|as_crispy_field }}</li>
+                    <li class="list-group-item col-4">
+                        <small>{% trans "Indicate estimated budget." %}</small>
+                    </li>
+                </ul>
+                <hr>
+                <button class="btn btn-lg btn-warning btn-block" type="submit">
+                    {% trans "UPDATE" %}
+                </button>
+            </form>
+            <hr>
+        </div>
+    </div>
 </div>
-
 
 {% endblock %}
 
